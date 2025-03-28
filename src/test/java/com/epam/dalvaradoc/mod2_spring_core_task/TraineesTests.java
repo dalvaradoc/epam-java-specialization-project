@@ -1,9 +1,6 @@
 package com.epam.dalvaradoc.mod2_spring_core_task;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map;
 
@@ -18,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
 @Slf4j
-class Mod2SpringCoreTaskApplicationTests {
+class TraineesTests {
 	@Autowired
 	Map<String, Trainee> traineesMap;
 	@Autowired
