@@ -18,8 +18,8 @@ public class UserUtils {
     return saltStr;
   }
 
-  public <V extends User> String getUsername(String firstName, String lastName, Map<String,V> userMap){
+  public <V extends User> String createUsername(String firstName, String lastName, Map<String,V> userMap){
     long repeated = userMap.values().stream().filter(o -> o.getFirstName().equals(firstName) && o.getLastName().equals(lastName)).count();
-    return firstName + "." + lastName + (repeated > 0 ? "#" + repeated+1 : "");
+    return firstName + "." + lastName + (repeated > 0 ? "#" + (repeated+1) : "");
   }
 }

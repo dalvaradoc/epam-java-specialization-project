@@ -19,6 +19,13 @@ public class Trainee extends User {
     this.birthdate = birthdate;
     this.address = address;
   }
+
+  public Trainee(Trainee trainee){
+    super(trainee.getFirstName(), trainee.getLastName(), trainee.getUsername(), trainee.getPassword(), trainee.isActive(), trainee.getUserId());
+    this.birthdate = trainee.getBirthdate();
+    this.address = trainee.address;
+  }
+
   @Override
   public String toString() {
     return "Trainee [birthdate=" + birthdate + ", address=" + address + ", getFirstName()=" + getFirstName()
@@ -26,5 +33,35 @@ public class Trainee extends User {
         + ", getUsername()=" + getUsername() + ", isActive()=" + isActive() + ", getClass()=" + getClass()
         + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
   }
-  
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + ((birthdate == null) ? 0 : birthdate.hashCode());
+    result = prime * result + ((address == null) ? 0 : address.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Trainee other = (Trainee) obj;
+    if (birthdate == null) {
+      if (other.birthdate != null)
+        return false;
+    } else if (!birthdate.equals(other.birthdate))
+      return false;
+    if (address == null) {
+      if (other.address != null)
+        return false;
+    } else if (!address.equals(other.address))
+      return false;
+    return true;
+  }  
 }

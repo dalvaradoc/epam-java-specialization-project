@@ -16,4 +16,13 @@ public class Training {
   private TrainingType type;
   private Date date;
   private int duration;
+
+  public Training(Training training){
+    this.traineeId = training.getTraineeId();
+    this.trainerId = training.getTrainerId();
+    this.name = training.getName();
+    this.type = training.getType();
+    this.date = training.date;
+    this.duration = training.duration;
+  }
 }
