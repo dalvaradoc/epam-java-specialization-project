@@ -12,7 +12,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TrainerService;
 
 @SpringBootTest
-public class TrainersTest {
+public class TrainersTests {
 	@Autowired
 	Map<String, Trainer> trainersMap;
 	@Autowired
@@ -26,6 +26,7 @@ public class TrainersTest {
 
 	@Test
 	public void trainersMapInitializedTest() {
+		assertEquals(trainersMap.size(), 8);
 		assertNotNull(trainersMap.get("1"));
 	}
 

@@ -29,6 +29,7 @@ class TraineesTests {
 
 	@Test
 	public void traineesMapInitializedTest() {
+		assertEquals(traineesMap.size(), 25);
 		assertNotNull(traineesMap.get("1"));
 	}
 

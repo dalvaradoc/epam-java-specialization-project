@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
+import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +29,9 @@ public class StorageBeansConfig {
   @Value("${my.properties.trainers-data-file}")
   private String trainersMapFile;
 
+  @Value("${my.properties.training-data-file}")
+  private String trainingMapFile;
+
   @Bean
   public Map<String, Trainee> traineesMap(){
     return getData(traineesMapFile, Trainee.class, new TypeReference<List<Trainee>>() {});
@@ -38,6 +42,11 @@ public class StorageBeansConfig {
     return getData(trainersMapFile, Trainer.class, new TypeReference<List<Trainer>>() {});
   }
 
+  @Bean
+  public Map<String, Training> trainingMap() {
+    return getData(trainingMapFile, Training.class, new TypeReference<List<Training>>() {});
+  }
+
   public <V> Map<String,V> getData(String dataFileRoute, Class<V> valueClass, TypeReference<List<V>> typeReference) {
     Map<String, V> values = new TreeMap<>();
     try (FileInputStream input = new FileInputStream(dataFileRoute)) {
@@ -45,6 +54,8 @@ public class StorageBeansConfig {
       List<V> listOfObjects = mapper.readValue(input, typeReference);
       if (User.class.isAssignableFrom(valueClass)){
         values = listOfObjects.stream().collect(Collectors.toMap(o -> ((User)o).getUserId(), o -> o));
+      } else if (Training.class.isAssignableFrom(valueClass)){
+        values = listOfObjects.stream().collect(Collectors.toMap(o -> ((Training)o).getName(), o -> o));
       }
       LOGGER.info("Finished loading mock data for " + valueClass.getSimpleName() + " map");
       return values;
