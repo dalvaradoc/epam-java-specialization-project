@@ -6,7 +6,10 @@ import java.util.Random;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.User;
 
 public class UserUtils {
-  public String getSaltString() {
+
+  private UserUtils(){}
+
+  public static String getSaltString() {
     String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890*-()/#!$%&=?¿";
     StringBuilder salt = new StringBuilder();
     Random rnd = new Random();
@@ -18,7 +21,7 @@ public class UserUtils {
     return saltStr;
   }
 
-  public <V extends User> String createUsername(String firstName, String lastName, Map<String,V> userMap){
+  public static <V extends User> String createUsername(String firstName, String lastName, Map<String,V> userMap){
     long repeated = userMap.values().stream().filter(o -> o.getFirstName().equals(firstName) && o.getLastName().equals(lastName)).count();
     return firstName + "." + lastName + (repeated > 0 ? "#" + (repeated+1) : "");
   }

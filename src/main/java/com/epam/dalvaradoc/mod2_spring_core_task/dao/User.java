@@ -1,7 +1,6 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +16,7 @@ public abstract class User {
   private String password;
   private boolean isActive;
   private String userId;
+
   @Override
   public int hashCode() {
     final int prime = 31;

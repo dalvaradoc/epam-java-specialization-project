@@ -30,7 +30,7 @@ public class TrainersTests {
 
 	@Test
 	public void trainersMapInitializedTest() {
-		assertEquals(trainersMap.size(), 8);
+		assertEquals(8, trainersMap.size());
 		assertNotNull(trainersMap.get("1"));
 	}
 
@@ -65,7 +65,8 @@ public class TrainersTests {
 		trainer.setFirstName("Jhonnn");
 		trainer.setLastName("Smithhh");
 		Trainer trainerCopy = new Trainer(trainer);
-		trainerService.updateTrainer(trainer); // The update changes the username
+		// The update changes the username
+		assertEquals(true, trainerService.updateTrainer(trainer));
 
 		assertNotEquals(trainer, trainerCopy);
 		assertEquals(trainerService.getTrainerById("1").getUsername(), "Jhonnn.Smithhh");

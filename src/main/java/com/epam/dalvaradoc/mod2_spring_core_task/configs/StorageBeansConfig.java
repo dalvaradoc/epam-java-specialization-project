@@ -60,8 +60,7 @@ public class StorageBeansConfig {
       LOGGER.info("Finished loading mock data for " + valueClass.getSimpleName() + " map");
       return values;
     } catch (Exception e) {
-      e.printStackTrace();
-      LOGGER.error(e.getMessage());
+      LOGGER.error("Error loading data for " + valueClass.getSimpleName(), e);
     }
     return new TreeMap<>();
   }
