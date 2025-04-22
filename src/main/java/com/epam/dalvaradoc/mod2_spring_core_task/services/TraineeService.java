@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.epam.dalvaradoc.mod2_spring_core_task.aop.CheckCredentials;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
@@ -18,9 +19,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TraineeService {
   private TraineeRepository traineeRepository;
+  private UserUtils userUtils;
   private final TraineeMapper mapper = new TraineeMapper();
 
-  public TraineeDTO getTraineeById(String id) {
+  @Autowired
+  public TraineeService(TraineeRepository traineeRepository, UserUtils userUtils) {
+    this.traineeRepository = traineeRepository;
+    this.userUtils = userUtils;
+  }
+
+  @CheckCredentials
+  public TraineeDTO getTraineeById(String id, String username, String password) {
     return Optional.ofNullable(id)
         .map(traineeRepository::findById)
         .map(opt -> opt.orElse(null))
@@ -29,7 +38,7 @@ public class TraineeService {
   }
 
   public TraineeDTO createTrainee(String firstName, String lastName, String address, Date birthdate){
-    String username = UserUtils.createUsername(firstName, lastName, traineeRepository);
+    String username = userUtils.createUsername(firstName, lastName);
     String password = UserUtils.getSaltString();
     
     Trainee trainee = new Trainee();
@@ -45,6 +54,7 @@ public class TraineeService {
     return mapper.toDTO(trainee);
   }
 
+  @CheckCredentials
   public boolean updateTrainee(Trainee trainee){
     Optional<Trainee> traineeOptional = traineeRepository.findById(trainee.getUserId());
 
@@ -54,7 +64,7 @@ public class TraineeService {
 
     Trainee oldTrainee = traineeOptional.get();
     if (!oldTrainee.getFirstName().equals(trainee.getFirstName()) || !oldTrainee.getLastName().equals(trainee.getLastName())){
-      String newUsername = UserUtils.createUsername(trainee.getFirstName(), trainee.getLastName(), traineeRepository);
+      String newUsername = userUtils.createUsername(trainee.getFirstName(), trainee.getLastName());
       trainee.setUsername(newUsername);
       LOGGER.info("Username changed");
     }
@@ -63,13 +73,9 @@ public class TraineeService {
     return true;
   }
 
-  public void deleteTraineeById(String userId) {
+  @CheckCredentials
+  public void deleteTraineeById(String userId, String username, String password) {
     traineeRepository.deleteById(userId);
     LOGGER.info("Trainee deleted: " + userId);
-  }
-
-  @Autowired
-  public void setTraineeRepository(TraineeRepository traineeRepository) {
-    this.traineeRepository = traineeRepository;
   }
 }

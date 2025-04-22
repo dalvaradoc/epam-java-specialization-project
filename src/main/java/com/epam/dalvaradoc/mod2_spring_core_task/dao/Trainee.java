@@ -18,7 +18,7 @@ public class Trainee extends User {
   private Date birthdate;
   private String address;
 
-  @OneToMany(mappedBy = "trainee")
+  @OneToMany(mappedBy = "trainee", cascade = jakarta.persistence.CascadeType.ALL)
   private List<Training> training = new ArrayList<>();
 
   public Trainee(String firstName, String lastName, String username, String password, boolean isActive, String userId,

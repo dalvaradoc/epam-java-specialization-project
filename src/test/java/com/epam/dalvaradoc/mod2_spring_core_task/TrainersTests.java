@@ -41,9 +41,9 @@ public class TrainersTests {
 
 	@Test
 	void getTrainerByIdTest() {
-		Trainer trainer = trainerRepository.findById("26").get();
-		TrainerDTO serviceTrainer = trainerService.getTrainerById("26");
-
+		Trainer trainer = trainerRepository.findById("26").orElse(null);
+		assertNotNull(trainer);
+		TrainerDTO serviceTrainer = trainerService.getTrainerById(trainer.getUserId(), trainer.getUsername(), trainer.getPassword());
 		assertTrainerEquals(trainerMapper.toObject(serviceTrainer), trainer);
 	}
 
@@ -76,7 +76,7 @@ public class TrainersTests {
 
 		TrainerDTO trainer2 = trainerService.createTrainer("Diego", "Alvarado", trainingTypeRepository.findByName("AEROBIC"));
 		assertNotNull(trainer2);
-		assertTrainerEquals(trainer2, trainerService.getTrainerById(trainer2.getUserId()));
+		assertTrainerEquals(trainerMapper.toObject(trainer2), trainerRepository.findById(trainer2.getUserId()).orElse(null));
 		assertNotEquals(trainer, trainer2);
 		assertEquals("Diego.Alvarado#2", trainer2.getUsername());
 
@@ -86,13 +86,14 @@ public class TrainersTests {
 
 	@Test
 	void updateTrainerTest() {
-		TrainerDTO trainer = trainerService.getTrainerById("26");
+		Trainer trainer = trainerRepository.findById("26").orElse(null);
+		assertNotNull(trainer);
 		trainer.setSpecialization(trainingTypeRepository.findByName("FLEXIBILITY"));
-		trainer.setFirstName("Jhonnn");
-		trainer.setLastName("Smithhh");
+		trainer.setFirstName("JhonnnTrainer");
+		trainer.setLastName("SmithhhTrainer");
 		// The update changes the username
-		assertEquals(true, trainerService.updateTrainer(trainerMapper.toObject(trainer)));
+		assertEquals(true, trainerService.updateTrainer(trainer));
 
-		assertEquals("Jhonnn.Smithhh", trainerService.getTrainerById("26").getUsername());
+		assertEquals("JhonnnTrainer.SmithhhTrainer", trainerService.getTrainerById("26", trainer.getUsername(), trainer.getPassword()).getUsername());
 	}
 }

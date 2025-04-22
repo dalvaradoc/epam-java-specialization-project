@@ -66,16 +66,16 @@ VALUES
 ('25','3148 Pine View Drive','2007-08-09');
 
 
-INSERT INTO "USERS" ("USER_ID","FIRST_NAME","LAST_NAME","USERNAME","IS_ACTIVE")
+INSERT INTO "USERS" ("USER_ID","FIRST_NAME","LAST_NAME","USERNAME", "PASSWORD","IS_ACTIVE")
 VALUES
-('26','Brady','Verick','Brady.Verick','FALSE'),
-('27','Stafford','Cicco','Stafford.Cicco','TRUE'),
-('28','Nobie','Linney','Nobie.Linney','FALSE'),
-('29','Prue','Nawton','Prue.Nawton','TRUE'),
-('30','Caryl','Shory','Caryl.Shory','TRUE'),
-('31','Rora','Loffhead','Rora.Loffhead','TRUE'),
-('32','Nat','Halpeine','Nat.Halpeine','FALSE'),
-('33','Faunie','Hauck','Faunie.Hauck','FALSE');
+('26','Brady','Verick','Brady.Verick','password','FALSE'),
+('27','Stafford','Cicco','Stafford.Cicco','password','TRUE'),
+('28','Nobie','Linney','Nobie.Linney','password','FALSE'),
+('29','Prue','Nawton','Prue.Nawton','password','TRUE'),
+('30','Caryl','Shory','Caryl.Shory','password','TRUE'),
+('31','Rora','Loffhead','Rora.Loffhead','password','TRUE'),
+('32','Nat','Halpeine','Nat.Halpeine','password','FALSE'),
+('33','Faunie','Hauck','Faunie.Hauck','password','FALSE');
 
 INSERT INTO "TRAINERS" ("USER_ID","SPECIALIZATION")
 VALUES

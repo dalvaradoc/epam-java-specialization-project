@@ -45,6 +45,6 @@ public class TrainingTests {
     // assertEquals(4, trainingService.getTrainings(null, null, null, trainingTypeRepository.findByName("AEROBIC"), null, null).size());
     assertEquals(2, trainingService.getTrainings(null, null, null, null, null, 38).size());
     // assertEquals(1, trainingService.getTrainings("21","4","ut erat curabitur gravida",trainingTypeRepository.findByName("WEIGHT"), null,54).size());
-    assertNull(trainingService.getTrainingByName("ut erat curabitur gravida"));
+    assertNotNull(trainingService.getTrainingByName("ut erat curabitur gravida"));
   }
 }

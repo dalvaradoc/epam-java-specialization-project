@@ -2,13 +2,22 @@ package com.epam.dalvaradoc.mod2_spring_core_task.utils;
 
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.UserRepository;
 
+@Component
 public class UserUtils {
   private static final String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890*-()/#!$%&=?¿";
   private static final Random rnd = new Random();
 
-  private UserUtils(){}
+  private UserRepository userRepository;
+
+  @Autowired
+  public UserUtils(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   public static String getSaltString() {
     StringBuilder salt = new StringBuilder();
@@ -19,8 +28,8 @@ public class UserUtils {
     return salt.toString();
   }
 
-  public static String createUsername(String firstName, String lastName, UserRepository repository) {
-    long repeated = repository.findByFirstNameAndLastName(firstName, lastName).size();
+  public String createUsername(String firstName, String lastName) {
+    long repeated = userRepository.findByFirstNameAndLastName(firstName, lastName).size();
     return firstName + "." + lastName + (repeated > 0 ? "#" + (repeated+1) : "");
   }
 }

@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 
-public interface TrainerRepository extends JpaRepository<Trainer, String>, UserRepository {
+public interface TrainerRepository extends JpaRepository<Trainer, String> {
 }
