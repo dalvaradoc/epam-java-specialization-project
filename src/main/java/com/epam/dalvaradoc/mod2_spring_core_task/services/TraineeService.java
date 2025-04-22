@@ -1,7 +1,6 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.services;
 
 import java.sql.Date;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class TraineeService {
   public TraineeDTO getTraineeById(String id) {
     return Optional.ofNullable(id)
         .map(traineeRepository::findById)
-        .get()
+        .map(Optional::get)
         .map(mapper::toDTO)
         .orElse(null);
   }

@@ -1,6 +1,5 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.services;
 
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserUtils;
@@ -20,11 +20,11 @@ public class TrainerService {
   private TrainerRepository trainerRepository; 
   private final TrainerMapper mapper = new TrainerMapper();
 
-  public Trainer getTrainerById(String userId) {
-    return Optional.ofNullable(userId).map(trainerRepository::findById).get().map(Trainer::new).orElse(null);
+  public TrainerDTO getTrainerById(String userId) {
+    return Optional.ofNullable(userId).map(trainerRepository::findById).map(Optional::get).map(mapper::toDTO).orElse(null);
   }
 
-  public Trainer createTrainer(String firstName, String lastName, TrainingType specialization){
+  public TrainerDTO createTrainer(String firstName, String lastName, TrainingType specialization){
     String username = UserUtils.createUsername(firstName, lastName, trainerRepository);
     String password = UserUtils.getSaltString();
     
@@ -38,7 +38,7 @@ public class TrainerService {
 
     trainerRepository.save(trainer);
     LOGGER.info("Trainer created: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
-    return trainer;
+    return mapper.toDTO(trainer);
   }
 
   public boolean updateTrainer(Trainer trainer){

@@ -2,9 +2,7 @@ package com.epam.dalvaradoc.mod2_spring_core_task.services;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ public class TrainingService {
   }
 
   public List<TrainingDTO> getTrainings() {
-    return trainingRepository.findAll().stream().map(mapper::toDTO).collect(Collectors.toList());
+    return trainingRepository.findAll().stream().map(mapper::toDTO).toList();
   }
 
   //Se podría mejorar usando queries en vez de streams
@@ -37,7 +35,7 @@ public class TrainingService {
         .filter(training -> checkType(training, type))
         .filter(training -> checkDate(training, date))
         .filter(training -> checkDuration(training, duration))
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private boolean checkTraineeId(Training training, String traineeId){
@@ -56,7 +54,7 @@ public class TrainingService {
     return Optional.ofNullable(date).filter(training.getDate()::equals).isPresent() || date == null;
   }
   private boolean checkDuration(Training training, Integer duration){
-    return Optional.ofNullable(duration).filter((d) -> d.equals(training.getDuration())).isPresent() || duration == null;
+    return Optional.ofNullable(duration).filter(d -> d.equals(training.getDuration())).isPresent() || duration == null;
   }
 
   public Training createTraining(String traineeId, String trainerId, String name, TrainingType type, Date date, Integer duration) {
