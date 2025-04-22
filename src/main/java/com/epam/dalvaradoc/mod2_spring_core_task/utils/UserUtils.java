@@ -13,7 +13,7 @@ public class UserUtils {
   public static String getSaltString() {
     StringBuilder salt = new StringBuilder();
     while (salt.length() < 10) { // length of the random string.
-      int index = (rnd.nextInt() * SALTCHARS.length());
+      int index = (int) (rnd.nextFloat() * SALTCHARS.length());
       salt.append(SALTCHARS.charAt(index));
     }
     return salt.toString();

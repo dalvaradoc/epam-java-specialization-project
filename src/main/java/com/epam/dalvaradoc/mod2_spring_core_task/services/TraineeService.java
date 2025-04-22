@@ -23,7 +23,7 @@ public class TraineeService {
   public TraineeDTO getTraineeById(String id) {
     return Optional.ofNullable(id)
         .map(traineeRepository::findById)
-        .map(Optional::get)
+        .map(opt -> opt.orElse(null))
         .map(mapper::toDTO)
         .orElse(null);
   }

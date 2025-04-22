@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,11 +25,8 @@ public class Training {
   private String traineeId;
   private String trainerId;
   private String name;
-  @OneToOne(cascade = {
-                        CascadeType.PERSIST,
-                        CascadeType.MERGE
-                      })
-  @JoinColumn(name = "training_type_id", referencedColumnName = "trainingTypeId")
+  @ManyToOne
+  @JoinColumn(name = "TYPE")
   private TrainingType type;
   private Date date;
   private int duration;

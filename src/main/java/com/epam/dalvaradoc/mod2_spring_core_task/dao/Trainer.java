@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
@@ -16,11 +17,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity(name = "trainers")
 public class Trainer extends User {
-  @OneToOne(cascade = {
-                        CascadeType.PERSIST,
-                        CascadeType.MERGE
-                      })
-  @JoinColumn(name = "training_type_id", referencedColumnName = "trainingTypeId")
+  @ManyToOne
+  @JoinColumn(name = "SPECIALIZATION")
   private TrainingType specialization;
 
   public Trainer(String firstName, String lastName, String username, String password, boolean isActive, String userId,

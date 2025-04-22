@@ -21,7 +21,11 @@ public class TrainerService {
   private final TrainerMapper mapper = new TrainerMapper();
 
   public TrainerDTO getTrainerById(String userId) {
-    return Optional.ofNullable(userId).map(trainerRepository::findById).map(Optional::get).map(mapper::toDTO).orElse(null);
+    return Optional.ofNullable(userId)
+        .map(trainerRepository::findById)
+        .map(opt -> opt.orElse(null))
+        .map(mapper::toDTO)
+        .orElse(null);
   }
 
   public TrainerDTO createTrainer(String firstName, String lastName, TrainingType specialization){

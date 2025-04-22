@@ -6,13 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.sql.Date;
-// import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TraineeService;
 
@@ -26,6 +27,8 @@ class TraineesTests {
 	@Autowired
 	private TraineeService traineeService;
 
+	private final TraineeMapper traineeMapper = new TraineeMapper();
+
 	@Test
 	void traineesMapInitializedTest() {
 		assertNotNull(traineeService);
@@ -35,18 +38,22 @@ class TraineesTests {
 
 	@Test
 	void createTraineeTest() {
-		traineeService.createTrainee("John", "Smith", "CL 1 # 1-2", Date.valueOf("2000-02-02"));
+		TraineeDTO trainee = traineeService.createTrainee("John", "Smith", "CL 1 # 1-2", Date.valueOf("2000-02-02"));
+		assertNotNull(traineeService.getTraineeById(trainee.getUserId()));
+		assertEquals(traineeMapper.toDTO(traineeRepository.findById(trainee.getUserId()).get()), trainee);
+
+		traineeRepository.deleteById(trainee.getUserId());
 	}
 
 	@Test
-	public void getTraineeByIdTest() {
-		assertEquals(trainee, traineeService.getTraineeById("1"));
-		// assertNull(traineesMap.get("300"));
+	void getTraineeByIdTest() {
+		assertNotNull(traineeService.getTraineeById("1"));
+		assertNull(traineeService.getTraineeById("300"));
 	}
 
 	@Test
 	void updateTraineeTest(){
-		Trainee trainee = traineeService.getTraineeById("1");
+		Trainee trainee = traineeMapper.toObject(traineeService.getTraineeById("1"));
 		trainee.setAddress("CL 1 # 1-2");
 		trainee.setFirstName("Jhonnn");
 		trainee.setLastName("Smithhh");
@@ -54,12 +61,12 @@ class TraineesTests {
 		traineeService.updateTrainee(trainee); // The update changes the username
 		
 		assertNotEquals(trainee, traineeCopy);
-		assertEquals(traineeService.getTraineeById("1").getUsername(), "Jhonnn.Smithhh");
+		assertEquals("Jhonnn.Smithhh", traineeService.getTraineeById("1").getUsername());
 	}
 
 	@Test
 	void deleteTraineeTest() {
-		Trainee trainee = traineeService.createTrainee("x", "x", "CL X # X - X", Date.valueOf("2000-02-02"));
+		Trainee trainee = traineeMapper.toObject(traineeService.createTrainee("x", "x", "CL X # X - X", Date.valueOf("2000-02-02")));
 		assertNotNull(trainee);
 		traineeService.deleteTraineeById(trainee.getUserId());
 		assertNull(traineeService.getTraineeById(trainee.getUserId()));
