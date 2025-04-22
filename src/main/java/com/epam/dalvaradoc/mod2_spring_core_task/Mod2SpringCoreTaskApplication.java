@@ -9,5 +9,4 @@ public class Mod2SpringCoreTaskApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(Mod2SpringCoreTaskApplication.class, args);
 	}
-
 }

@@ -30,7 +30,7 @@ class TraineesTests {
 	void traineesMapInitializedTest() {
 		assertNotNull(traineeService);
 		assertNotNull(traineeRepository);
-		// assertEquals(25, traineeRepository.findAll().size());
+		assertEquals(25, traineeRepository.findAll().size());
 	}
 
 	@Test

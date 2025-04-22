@@ -1,8 +1,12 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity(name = "trainers")
 public class Trainer extends User {
-  @Enumerated(EnumType.STRING)
+  @OneToOne(cascade = {
+                        CascadeType.PERSIST,
+                        CascadeType.MERGE
+                      })
+  @JoinColumn(name = "training_type_id", referencedColumnName = "trainingTypeId")
   private TrainingType specialization;
 
   public Trainer(String firstName, String lastName, String username, String password, boolean isActive, String userId,
