@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
+import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
@@ -39,10 +41,10 @@ public class TrainingService {
   }
 
   private boolean checkTraineeId(Training training, String traineeId){
-    return Optional.ofNullable(traineeId).filter(training.getTraineeId()::equals).isPresent() || traineeId == null;
+    return Optional.ofNullable(traineeId).filter(training.getTrainee()::equals).isPresent() || traineeId == null;
   }
   private boolean checkTrainerId(Training training, String trainerId){
-    return Optional.ofNullable(trainerId).filter(training.getTrainerId()::equals).isPresent() || trainerId == null;
+    return Optional.ofNullable(trainerId).filter(training.getTrainer()::equals).isPresent() || trainerId == null;
   }
   private boolean checkName(Training training, String name){
     return Optional.ofNullable(name).filter(training.getName()::equals).isPresent() || name == null;
@@ -57,10 +59,10 @@ public class TrainingService {
     return Optional.ofNullable(duration).filter(d -> d.equals(training.getDuration())).isPresent() || duration == null;
   }
 
-  public Training createTraining(String traineeId, String trainerId, String name, TrainingType type, Date date, Integer duration) {
+  public Training createTraining(Trainee trainee, Trainer trainer, String name, TrainingType type, Date date, Integer duration) {
     Training training = new Training();
-    training.setTraineeId(traineeId);
-    training.setTrainerId(trainerId);
+    training.setTrainee(trainee);
+    training.setTrainer(trainer);
     training.setName(name);
     training.setType(type);
     training.setDate(date);

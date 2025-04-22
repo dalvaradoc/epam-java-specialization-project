@@ -2,8 +2,6 @@ package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
 import java.sql.Date;
 
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
-
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

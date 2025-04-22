@@ -8,8 +8,8 @@ public class TrainingMapper implements Mapper<Training, TrainingDTO> {
     public Training toObject(TrainingDTO dto) {
       Training training = new Training();
       training.setTrainingId(dto.getTrainingId());
-      training.setTraineeId(dto.getTraineeId());
-      training.setTrainerId(dto.getTrainerId());
+      training.setTrainee(dto.getTrainee());
+      training.setTrainer(dto.getTrainer());
       training.setName(dto.getName());
       training.setType(dto.getType());
       training.setDate(dto.getDate());
@@ -21,8 +21,8 @@ public class TrainingMapper implements Mapper<Training, TrainingDTO> {
     public TrainingDTO toDTO(Training object) {
       return TrainingDTO.builder()
           .trainingId(object.getTrainingId())
-          .traineeId(object.getTraineeId())
-          .trainerId(object.getTrainerId())
+          .trainee(object.getTrainee())
+          .trainer(object.getTrainer())
           .name(object.getName())
           .type(object.getType())
           .date(object.getDate())

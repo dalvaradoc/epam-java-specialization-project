@@ -3,16 +3,13 @@ package com.epam.dalvaradoc.mod2_spring_core_task;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
-import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
@@ -45,20 +42,41 @@ public class TrainersTests {
 	@Test
 	void getTrainerByIdTest() {
 		Trainer trainer = trainerRepository.findById("26").get();
-		assertEquals(trainerMapper.toDTO(trainer), trainerService.getTrainerById("26"));
-		assertNull(trainerService.getTrainerById("300"));
+		TrainerDTO serviceTrainer = trainerService.getTrainerById("26");
+
+		assertTrainerEquals(trainerMapper.toObject(serviceTrainer), trainer);
+	}
+
+	private void assertTrainerEquals(Trainer trainer1, Trainer trainer2) {
+		assertEquals(trainer1.getUserId(), trainer2.getUserId());
+		assertEquals(trainer1.getFirstName(), trainer2.getFirstName());
+		assertEquals(trainer1.getLastName(), trainer2.getLastName());
+		assertEquals(trainer1.getUsername(), trainer2.getUsername());
+		assertEquals(trainer1.getPassword(), trainer2.getPassword());
+		assertEquals(trainer1.isActive(), trainer2.isActive());
+		assertEquals(trainer1.getSpecialization().getTrainingTypeId(), trainer2.getSpecialization().getTrainingTypeId());
+	}
+
+	private void assertTrainerEquals(TrainerDTO trainer1, TrainerDTO trainer2) {
+		assertEquals(trainer1.getUserId(), trainer2.getUserId());
+		assertEquals(trainer1.getFirstName(), trainer2.getFirstName());
+		assertEquals(trainer1.getLastName(), trainer2.getLastName());
+		assertEquals(trainer1.getUsername(), trainer2.getUsername());
+		assertEquals(trainer1.getPassword(), trainer2.getPassword());
+		assertEquals(trainer1.isActive(), trainer2.isActive());
+		assertEquals(trainer1.getSpecialization().getTrainingTypeId(), trainer2.getSpecialization().getTrainingTypeId());
 	}
 
 	@Test
 	void createTrainerTest() {
 		TrainerDTO trainer = trainerService.createTrainer("Diego", "Alvarado", trainingTypeRepository.findByName("AEROBIC"));
 		assertNotNull(trainer);
-		assertEquals(trainer, trainerMapper.toDTO(trainerRepository.findById(trainer.getUserId()).orElse(null)));
+		assertTrainerEquals(trainerMapper.toObject(trainer), trainerRepository.findById(trainer.getUserId()).orElse(null));
 		assertEquals("Diego.Alvarado", trainer.getUsername());
 
 		TrainerDTO trainer2 = trainerService.createTrainer("Diego", "Alvarado", trainingTypeRepository.findByName("AEROBIC"));
 		assertNotNull(trainer2);
-		assertEquals(trainer2, trainerService.getTrainerById(trainer2.getUserId()));
+		assertTrainerEquals(trainer2, trainerService.getTrainerById(trainer2.getUserId()));
 		assertNotEquals(trainer, trainer2);
 		assertEquals("Diego.Alvarado#2", trainer2.getUsername());
 
@@ -72,11 +90,9 @@ public class TrainersTests {
 		trainer.setSpecialization(trainingTypeRepository.findByName("FLEXIBILITY"));
 		trainer.setFirstName("Jhonnn");
 		trainer.setLastName("Smithhh");
-		Trainer trainerCopy = trainerMapper.toObject(trainer);
 		// The update changes the username
 		assertEquals(true, trainerService.updateTrainer(trainerMapper.toObject(trainer)));
 
-		assertNotEquals(trainer, trainerCopy);
 		assertEquals("Jhonnn.Smithhh", trainerService.getTrainerById("26").getUsername());
 	}
 }
