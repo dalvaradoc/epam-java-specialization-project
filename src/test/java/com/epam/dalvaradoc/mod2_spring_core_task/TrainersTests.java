@@ -49,6 +49,15 @@ public class TrainersTests {
 		assertTrainerEquals(trainerMapper.toObject(serviceTrainer), trainer);
 	}
 
+	@Test
+	void getTrainerByUsernameTest() {
+		Trainer trainer = trainerRepository.findById("26").orElse(null);
+		assertNotNull(trainer);
+		TrainerDTO serviceTrainer = trainerService.getTrainerByUsername(trainer.getUsername(), trainer.getPassword());
+		assertTrainerEquals(trainerMapper.toObject(serviceTrainer), trainer);
+		assertThrows(SecurityException.class, () -> trainerService.getTrainerByUsername("xxxxxx", "notThePassword"));
+	}
+
 	private void assertTrainerEquals(Trainer trainer1, Trainer trainer2) {
 		assertEquals(trainer1.getUserId(), trainer2.getUserId());
 		assertEquals(trainer1.getFirstName(), trainer2.getFirstName());
@@ -110,4 +119,21 @@ public class TrainersTests {
 		assertTrue(trainerRepository.findById(trainer.getUserId()).get().isActive());
 		assertThrows(SecurityException.class, () -> trainerService.changeActiveState(trainer.getUserId(), trainer.getUsername(), "NotThePassword"));
 	}
+
+	@Test
+	void changePasswordTest() {
+		Trainer trainer = trainerRepository.findById("26").orElse(null);
+		assertNotNull(trainer);
+		String oldPassword = trainer.getPassword();
+		trainerService.changePassword("newPassword", trainer.getUsername(), trainer.getPassword());
+		assertNotEquals(oldPassword, trainerRepository.findById("26").map(Trainer::getPassword).orElse(null));
+	}
+
+	// @Test
+	// void deleteTrainerTest() {
+	// 	TrainerDTO trainer = trainerService.createTrainer("Diego", "Alvarado", trainingTypeRepository.findByName("AEROBIC"));
+	// 	assertNotNull(trainer);
+	// 	trainerService.deleteTrainerByUsername(trainer.getUsername(), trainer.getPassword());
+	// 	assertFalse(trainerRepository.findById(trainer.getUserId()).isPresent());
+	// }
 }

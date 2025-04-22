@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Date;
@@ -19,6 +20,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TraineeService;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
@@ -54,6 +56,12 @@ class TraineesTests {
 	}
 
 	@Test
+	void getTraineeByUsernameTest() {
+		assertNotNull(traineeService.getTraineeByUsername("Peggie.Barthelemy", "rD4=ob.G8"));
+		assertThrows(SecurityException.class, () -> traineeService.getTraineeByUsername("xxxxxx", "rD4=ob.G8"));
+	}
+
+	@Test
 	void updateTraineeTest(){
 		Trainee trainee = traineeRepository.findById("1").orElse(null);
 		assertNotNull(trainee);
@@ -65,6 +73,15 @@ class TraineesTests {
 		
 		assertNotEquals(trainee, traineeCopy);
 		assertEquals("Jhonnn.Smithhh", traineeRepository.findById("1").map(Trainee::getUsername).orElse(null));
+	}
+
+	@Test
+	void changePasswordTest() {
+		Trainee trainee = traineeRepository.findById("1").orElse(null);
+		assertNotNull(trainee);
+		String oldPassword = trainee.getPassword();
+		traineeService.changePassword("newPassword", trainee.getUsername(), trainee.getPassword());
+		assertNotEquals(oldPassword, traineeRepository.findById("1").map(Trainee::getPassword).orElse(null));
 	}
 
 	@Test
@@ -82,6 +99,15 @@ class TraineesTests {
 		Trainee trainee = traineeMapper.toObject(traineeService.createTrainee("x", "x", "CL X # X - X", Date.valueOf("2000-02-02")));
 		assertNotNull(trainee);
 		traineeService.deleteTraineeById(trainee.getUserId(), trainee.getUsername(), trainee.getPassword());
+		assertFalse(traineeRepository.findById(trainee.getUserId()).isPresent());
+	}
+
+	@Test
+	@Transactional
+	void deleteByUsernameTest() {
+		Trainee trainee = traineeMapper.toObject(traineeService.createTrainee("x", "x", "CL X # X - X", Date.valueOf("2000-02-02")));
+		assertNotNull(trainee);
+		traineeService.deleteTraineeByUsername(trainee.getUsername(), trainee.getPassword());
 		assertFalse(traineeRepository.findById(trainee.getUserId()).isPresent());
 	}
 }

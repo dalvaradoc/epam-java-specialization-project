@@ -37,6 +37,14 @@ public class TrainerService {
         .orElse(null);
   }
 
+  @CheckCredentials
+  public TrainerDTO getTrainerByUsername(String username, String password) {
+    return Optional.ofNullable(username)
+        .map(trainerRepository::findByUsername)
+        .map(mapper::toDTO)
+        .orElse(null);
+  }
+
   public TrainerDTO createTrainer(String firstName, String lastName, TrainingType specialization){
     String username = userUtils.createUsername(firstName, lastName);
     String password = UserUtils.getSaltString();
@@ -85,4 +93,28 @@ public class TrainerService {
     LOGGER.info("Trainer active state changed: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
     return trainer.isActive();
   }
+
+  @CheckCredentials
+  public boolean changePassword(String newPassword, String username, String password) {
+    Trainer trainer = trainerRepository.findByUsername(username);
+    if (trainer == null){
+      return false;
+    }
+
+    trainer.setPassword(newPassword);
+    trainerRepository.save(trainer);
+    LOGGER.info("Trainer password changed: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
+    return true;
+  }
+
+  // @CheckCredentials
+  // public boolean deleteTrainerByUsername(String username, String password) {
+  //   Trainer trainer = trainerRepository.findByUsername(username);
+  //   if (trainer == null){
+  //     return false;
+  //   }
+  //   trainerRepository.delete(trainer);
+  //   LOGGER.info("Trainer deleted: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
+  //   return true;
+  // }
 }

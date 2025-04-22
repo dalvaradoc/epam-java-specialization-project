@@ -1,5 +1,6 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.services;
 
+import java.lang.foreign.Linker.Option;
 import java.sql.Date;
 import java.util.Optional;
 
@@ -33,6 +34,14 @@ public class TraineeService {
     return Optional.ofNullable(id)
         .map(traineeRepository::findById)
         .map(opt -> opt.orElse(null))
+        .map(mapper::toDTO)
+        .orElse(null);
+  }
+
+  @CheckCredentials
+  public TraineeDTO getTraineeByUsername(String username, String password) {
+    return Optional.ofNullable(username)
+        .map(traineeRepository::findByUsername)
         .map(mapper::toDTO)
         .orElse(null);
   }
@@ -74,6 +83,19 @@ public class TraineeService {
   }
 
   @CheckCredentials
+  public boolean changePassword(String newPassword, String username, String password) {
+    Trainee trainee = traineeRepository.findByUsername(username);
+    if (trainee == null){
+      return false;
+    }
+
+    trainee.setPassword(newPassword);
+    traineeRepository.save(trainee);
+    LOGGER.info("Trainee password changed: " + trainee.toString());
+    return true;
+  }
+
+  @CheckCredentials
   public boolean changeActiveState(String userId, String username, String password) {
     Optional<Trainee> traineeOptional = traineeRepository.findById(userId);
     if (traineeOptional.isEmpty()){
@@ -90,5 +112,11 @@ public class TraineeService {
   public void deleteTraineeById(String userId, String username, String password) {
     traineeRepository.deleteById(userId);
     LOGGER.info("Trainee deleted: " + userId);
+  }
+
+  @CheckCredentials
+  public void deleteTraineeByUsername(String username, String password) {
+    traineeRepository.deleteByUsername(username);
+    LOGGER.info("Trainee deleted: " + username);
   }
 }
