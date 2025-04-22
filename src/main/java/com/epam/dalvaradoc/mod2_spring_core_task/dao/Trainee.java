@@ -16,7 +16,7 @@ import lombok.Setter;
 public class Trainee extends User {
   private Date birthdate;
   private String address;
-  
+
   public Trainee(String firstName, String lastName, String username, String password, boolean isActive, String userId,
       Date birthdate, String address) {
     super(userId, firstName, lastName, username, password, isActive);
@@ -24,14 +24,11 @@ public class Trainee extends User {
     this.address = address;
   }
 
-  public Trainee(TraineeDTO dto){
-     
-  }
-
-  public Trainee(Trainee trainee){
-    super(trainee.getUserId(), trainee.getFirstName(), trainee.getLastName(), trainee.getUsername(), trainee.getPassword(), trainee.isActive());
+  public Trainee(Trainee trainee) {
+    super(trainee.getUserId(), trainee.getFirstName(), trainee.getLastName(), trainee.getUsername(),
+        trainee.getPassword(), trainee.isActive());
     this.birthdate = trainee.getBirthdate();
-    this.address = trainee.address;
+    this.address = trainee.getAddress();
   }
 
   @Override

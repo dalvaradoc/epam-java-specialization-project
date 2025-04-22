@@ -39,13 +39,13 @@ public class TrainersTests {
 	@Test
 	void trainersMapInitializedTest() {
 		assertEquals(8, trainerRepository.findAll().size());
-		assertNotNull(trainerRepository.findById("1"));
+		assertNotNull(trainerRepository.findById("26"));
 	}
 
 	@Test
 	void getTrainerByIdTest() {
-		Trainer trainer = trainerRepository.findById("1").get();
-		assertEquals(trainerMapper.toDTO(trainer), trainerService.getTrainerById("1"));
+		Trainer trainer = trainerRepository.findById("26").get();
+		assertEquals(trainerMapper.toDTO(trainer), trainerService.getTrainerById("26"));
 		assertNull(trainerService.getTrainerById("300"));
 	}
 
@@ -68,15 +68,15 @@ public class TrainersTests {
 
 	@Test
 	void updateTrainerTest() {
-		TrainerDTO trainer = trainerService.getTrainerById("1");
+		TrainerDTO trainer = trainerService.getTrainerById("26");
 		trainer.setSpecialization(trainingTypeRepository.findByName("FLEXIBILITY"));
 		trainer.setFirstName("Jhonnn");
 		trainer.setLastName("Smithhh");
-		Trainer trainerCopy = new Trainer(trainer);
+		Trainer trainerCopy = trainerMapper.toObject(trainer);
 		// The update changes the username
-		assertEquals(true, trainerService.updateTrainer(trainer));
+		assertEquals(true, trainerService.updateTrainer(trainerMapper.toObject(trainer)));
 
 		assertNotEquals(trainer, trainerCopy);
-		assertEquals(trainerService.getTrainerById("1").getUsername(), "Jhonnn.Smithhh");
+		assertEquals("Jhonnn.Smithhh", trainerService.getTrainerById("26").getUsername());
 	}
 }

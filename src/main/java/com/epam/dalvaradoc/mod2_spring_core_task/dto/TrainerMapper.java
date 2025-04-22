@@ -22,7 +22,7 @@ public class TrainerMapper implements Mapper<Trainer, TrainerDTO> {
 
   @Override
   public TrainerDTO toDTO(Trainer object) {
-    TrainerDTO trainerDTO = TrainerDTO.builder()
+    return TrainerDTO.builder()
         .userId(object.getUserId())
         .firstName(object.getFirstName())
         .lastName(object.getLastName())
@@ -31,7 +31,5 @@ public class TrainerMapper implements Mapper<Trainer, TrainerDTO> {
         .isActive(object.isActive())
         .specialization(object.getSpecialization())
         .build();
-
-    return trainerDTO;
   }
 }
