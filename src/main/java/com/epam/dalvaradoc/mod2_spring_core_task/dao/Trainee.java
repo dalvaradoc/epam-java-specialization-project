@@ -2,6 +2,8 @@ package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
 import java.sql.Date;
 
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
+
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,10 @@ public class Trainee extends User {
     super(userId, firstName, lastName, username, password, isActive);
     this.birthdate = birthdate;
     this.address = address;
+  }
+
+  public Trainee(TraineeDTO dto){
+     
   }
 
   public Trainee(Trainee trainee){

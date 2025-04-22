@@ -13,55 +13,63 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingTypeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TrainerService;
 
 @SpringBootTest
 public class TrainersTests {
 	@Autowired
-	Map<String, Trainer> trainersMap;
+	private TrainerRepository trainerRepository;
+	@Autowired
+	private TrainingTypeRepository trainingTypeRepository;
 	@Autowired
 	private TrainerService trainerService;
+
+	private TrainerMapper trainerMapper = new TrainerMapper();
 
 	@Test
 	void contextLoads() {
 		assertNotNull(trainerService);
-		assertNotNull(trainersMap);
+		assertNotNull(trainerRepository);
 	}
 
 	@Test
-	public void trainersMapInitializedTest() {
-		assertEquals(8, trainersMap.size());
-		assertNotNull(trainersMap.get("1"));
+	void trainersMapInitializedTest() {
+		assertEquals(8, trainerRepository.findAll().size());
+		assertNotNull(trainerRepository.findById("1"));
 	}
 
 	@Test
-	public void getTrainerByIdTest() {
-		Trainer trainer = trainersMap.get("1");
-		assertEquals(trainer, trainerService.getTrainerById("1"));
-		assertNull(trainersMap.get("300"));
+	void getTrainerByIdTest() {
+		Trainer trainer = trainerRepository.findById("1").get();
+		assertEquals(trainerMapper.toDTO(trainer), trainerService.getTrainerById("1"));
+		assertNull(trainerService.getTrainerById("300"));
 	}
 
 	@Test
 	void createTrainerTest() {
-		Trainer trainer = trainerService.createTrainer("Diego", "Alvarado", TrainingType.AEROBIC);
+		TrainerDTO trainer = trainerService.createTrainer("Diego", "Alvarado", trainingTypeRepository.findByName("AEROBIC"));
 		assertNotNull(trainer);
-		assertEquals(trainer, trainerService.getTrainerById(trainer.getUserId()));
-		assertEquals(trainer.getUsername(), "Diego.Alvarado");
+		assertEquals(trainer, trainerMapper.toDTO(trainerRepository.findById(trainer.getUserId()).orElse(null)));
+		assertEquals("Diego.Alvarado", trainer.getUsername());
 
-		Trainer trainer2 = trainerService.createTrainer("Diego", "Alvarado", TrainingType.AEROBIC);
+		TrainerDTO trainer2 = trainerService.createTrainer("Diego", "Alvarado", trainingTypeRepository.findByName("AEROBIC"));
 		assertNotNull(trainer2);
 		assertEquals(trainer2, trainerService.getTrainerById(trainer2.getUserId()));
 		assertNotEquals(trainer, trainer2);
-		assertEquals(trainer2.getUsername(), "Diego.Alvarado#2");
+		assertEquals("Diego.Alvarado#2", trainer2.getUsername());
 
-		trainersMap.remove(trainer.getUserId());
-		trainersMap.remove(trainer2.getUserId());
+		trainerRepository.deleteById(trainer.getUserId());
+		trainerRepository.deleteById(trainer2.getUserId());
 	}
 
 	@Test
 	void updateTrainerTest() {
-		Trainer trainer = trainerService.getTrainerById("1");
-		trainer.setSpecialization(TrainingType.FLEXIBILITY);
+		TrainerDTO trainer = trainerService.getTrainerById("1");
+		trainer.setSpecialization(trainingTypeRepository.findByName("FLEXIBILITY"));
 		trainer.setFirstName("Jhonnn");
 		trainer.setLastName("Smithhh");
 		Trainer trainerCopy = new Trainer(trainer);
