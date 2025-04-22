@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Date;
 
@@ -64,6 +65,16 @@ class TraineesTests {
 		
 		assertNotEquals(trainee, traineeCopy);
 		assertEquals("Jhonnn.Smithhh", traineeRepository.findById("1").map(Trainee::getUsername).orElse(null));
+	}
+
+	@Test
+	void changeActiveStateTest() {
+		Trainee trainee = traineeRepository.findById("1").orElse(null);
+		trainee.setActive(false);
+		traineeService.updateTrainee(trainee);
+		assertFalse(trainee.isActive());
+		traineeService.changeActiveState(trainee.getUserId(), trainee.getUsername(), trainee.getPassword());
+		assertTrue(traineeRepository.findById(trainee.getUserId()).get().isActive());
 	}
 
 	@Test

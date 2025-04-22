@@ -1,9 +1,11 @@
 package com.epam.dalvaradoc.mod2_spring_core_task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,5 +97,17 @@ public class TrainersTests {
 		assertEquals(true, trainerService.updateTrainer(trainer));
 
 		assertEquals("JhonnnTrainer.SmithhhTrainer", trainerService.getTrainerById("26", trainer.getUsername(), trainer.getPassword()).getUsername());
+	}
+
+	@Test
+	void changeActiveStateTest() {
+		Trainer trainer = trainerRepository.findById("26").orElse(null);
+		assertNotNull(trainer);
+		trainer.setActive(false);
+		trainerService.updateTrainer(trainer);
+		assertFalse(trainer.isActive());
+		trainerService.changeActiveState(trainer.getUserId(), trainer.getUsername(), trainer.getPassword());
+		assertTrue(trainerRepository.findById(trainer.getUserId()).get().isActive());
+		assertThrows(SecurityException.class, () -> trainerService.changeActiveState(trainer.getUserId(), trainer.getUsername(), "NotThePassword"));
 	}
 }

@@ -72,4 +72,17 @@ public class TrainerService {
     LOGGER.info("Trainer updated: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
     return true;
   }
+
+  @CheckCredentials
+  public boolean changeActiveState(String userId, String username, String password) {
+    Optional<Trainer> trainerOptional = trainerRepository.findById(userId);
+    if (trainerOptional.isEmpty()){
+      return false;
+    }
+    Trainer trainer = trainerOptional.get();
+    trainer.setActive(!trainer.isActive());
+    trainerRepository.save(trainer);
+    LOGGER.info("Trainer active state changed: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
+    return trainer.isActive();
+  }
 }

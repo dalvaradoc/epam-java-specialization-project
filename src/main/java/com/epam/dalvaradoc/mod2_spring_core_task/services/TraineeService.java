@@ -74,6 +74,19 @@ public class TraineeService {
   }
 
   @CheckCredentials
+  public boolean changeActiveState(String userId, String username, String password) {
+    Optional<Trainee> traineeOptional = traineeRepository.findById(userId);
+    if (traineeOptional.isEmpty()){
+      return false;
+    }
+    Trainee trainee = traineeOptional.get();
+    trainee.setActive(!trainee.isActive());
+    traineeRepository.save(trainee);
+    LOGGER.info("Trainee active state changed: " + trainee.toString());
+    return trainee.isActive();
+  }
+
+  @CheckCredentials
   public void deleteTraineeById(String userId, String username, String password) {
     traineeRepository.deleteById(userId);
     LOGGER.info("Trainee deleted: " + userId);
