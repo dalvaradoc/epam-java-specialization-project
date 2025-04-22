@@ -1,8 +1,11 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +17,9 @@ import lombok.Setter;
 public class Trainee extends User {
   private Date birthdate;
   private String address;
+
+  @OneToMany(mappedBy = "trainee")
+  private List<Training> training = new ArrayList<>();
 
   public Trainee(String firstName, String lastName, String username, String password, boolean isActive, String userId,
       Date birthdate, String address) {

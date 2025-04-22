@@ -1,8 +1,12 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +19,9 @@ public class Trainer extends User {
   @ManyToOne
   @JoinColumn(name = "SPECIALIZATION")
   private TrainingType specialization;
+
+  @OneToMany(mappedBy = "trainer")
+  private List<Training> training = new ArrayList<>();
 
   public Trainer(String firstName, String lastName, String username, String password, boolean isActive, String userId,
       TrainingType specialization) {
