@@ -20,60 +20,62 @@ public class TrainingService {
   private TrainingRepository trainingRepository;
   private final TrainingMapper mapper = new TrainingMapper();
 
+  @Autowired
+  public TrainingService(TrainingRepository trainingRepository) {
+    this.trainingRepository = trainingRepository;
+  }
+
   public TrainingDTO getTrainingByName(String name) {
     return trainingRepository.findByName(name).map(mapper::toDTO).orElse(null);
+  }
+
+  public TrainingDTO getTrainingById(String id) {
+    return trainingRepository.findById(id).map(mapper::toDTO).orElse(null);
   }
 
   public List<TrainingDTO> getTrainings() {
     return trainingRepository.findAll().stream().map(mapper::toDTO).toList();
   }
 
-  //Se podría mejorar usando queries en vez de streams
-  public List<Training> getTrainings(String traineeId, String trainerId, String name, TrainingType type, Date date, Integer duration) {
-    return trainingRepository.findAll().stream()
-        .filter(training -> checkTraineeId(training, traineeId))
-        .filter(training -> checkTrainerId(training, trainerId))
-        .filter(training -> checkName(training, name))
-        .filter(training -> checkType(training, type))
-        .filter(training -> checkDate(training, date))
-        .filter(training -> checkDuration(training, duration))
-        .toList();
+  public List<TrainingDTO> getTrainingsByTraineeUsername(String traineeUsername) {
+    return Optional.ofNullable(traineeUsername)
+        .map(trainingRepository::findAllByTraineeUsername)
+        .map(list -> list.stream().map(mapper::toDTO).toList())
+        .orElse(null);
   }
 
-  private boolean checkTraineeId(Training training, String traineeId){
-    return Optional.ofNullable(traineeId).filter(training.getTrainee()::equals).isPresent() || traineeId == null;
-  }
-  private boolean checkTrainerId(Training training, String trainerId){
-    return Optional.ofNullable(trainerId).filter(training.getTrainer()::equals).isPresent() || trainerId == null;
-  }
-  private boolean checkName(Training training, String name){
-    return Optional.ofNullable(name).filter(training.getName()::equals).isPresent() || name == null;
-  }
-  private boolean checkType(Training training, TrainingType type){
-    return Optional.ofNullable(type).filter(training.getType()::equals).isPresent() || type == null;
-  }
-  private boolean checkDate(Training training, Date date){
-    return Optional.ofNullable(date).filter(training.getDate()::equals).isPresent() || date == null;
-  }
-  private boolean checkDuration(Training training, Integer duration){
-    return Optional.ofNullable(duration).filter(d -> d.equals(training.getDuration())).isPresent() || duration == null;
+  public List<TrainingDTO> getTrainingsByTraineeUsername(String traineeUsername, Date from, Date to, String trainerName, TrainingType type) {
+    return Optional.ofNullable(traineeUsername)
+        .map(username -> trainingRepository.findAllByTraineeUsername(traineeUsername, from, to, trainerName, type))
+        .map(list -> list.stream().map(mapper::toDTO).toList())
+        .orElse(null);
   }
 
-  public Training createTraining(Trainee trainee, Trainer trainer, String name, TrainingType type, Date date, Integer duration) {
-    Training training = new Training();
-    training.setTrainee(trainee);
-    training.setTrainer(trainer);
-    training.setName(name);
-    training.setType(type);
-    training.setDate(date);
-    training.setDuration(duration);
-
-    trainingRepository.save(training);
-    return training;
+  public List<TrainingDTO> getTrainingsByTrainerUsername(String trainerUsername) {
+    return Optional.ofNullable(trainerUsername)
+        .map(trainingRepository::findAllByTrainerUsername)
+        .map(list -> list.stream().map(mapper::toDTO).toList())
+        .orElse(null);
   }
 
-  @Autowired
-  public void setTrainingRepository(TrainingRepository trainingRepository) {
-    this.trainingRepository = trainingRepository;
+  public List<TrainingDTO> getTrainingsByTrainerUsername(String trainerUsername, Date from, Date to, String traineeName) {
+    return Optional.ofNullable(trainerUsername)
+        .map(username -> trainingRepository.findAllByTrainerUsername(trainerUsername, from, to, traineeName))
+        .map(list -> list.stream().map(mapper::toDTO).toList())
+        .orElse(null);
+  }
+
+  public TrainingDTO createTraining(Trainee trainee, Trainer trainer, String name, TrainingType type, Date date, Integer duration) {
+    TrainingDTO trainingDTO = TrainingDTO.builder()
+        .trainee(trainee)
+        .trainer(trainer)
+        .name(name)
+        .type(type)
+        .date(date)
+        .duration(duration)
+        .build();
+
+    Training training = trainingRepository.save(mapper.toObject(trainingDTO));
+    return mapper.toDTO(training);
   }
 }

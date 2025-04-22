@@ -2,9 +2,14 @@ package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +20,19 @@ import lombok.Setter;
 @Setter
 @Entity(name = "trainees")
 public class Trainee extends User {
+
   private Date birthdate;
+
   private String address;
 
   @OneToMany(mappedBy = "trainee", cascade = jakarta.persistence.CascadeType.ALL)
   private List<Training> training = new ArrayList<>();
+
+  @ManyToMany
+  @JoinTable(name = "trainee_trainer",
+      joinColumns = @JoinColumn(name = "trainee_id"),
+      inverseJoinColumns = @JoinColumn(name = "trainer_id"))
+  private Set<Trainer> trainers = new HashSet<>();
 
   public Trainee(String firstName, String lastName, String username, String password, boolean isActive, String userId,
       Date birthdate, String address) {

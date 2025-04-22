@@ -19,7 +19,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingTypeReposi
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TrainerService;
 
 @SpringBootTest
-public class TrainersTests {
+class TrainersTests {
 	@Autowired
 	private TrainerRepository trainerRepository;
 	@Autowired

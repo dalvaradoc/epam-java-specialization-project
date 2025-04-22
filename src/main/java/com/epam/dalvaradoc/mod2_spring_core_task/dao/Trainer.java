@@ -1,10 +1,13 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
@@ -22,6 +25,9 @@ public class Trainer extends User {
 
   @OneToMany(mappedBy = "trainer")
   private List<Training> training = new ArrayList<>();
+
+  @ManyToMany(mappedBy = "trainers")
+  private Set<Trainee> trainees = new HashSet<>();
 
   public Trainer(String firstName, String lastName, String username, String password, boolean isActive, String userId,
       TrainingType specialization) {
