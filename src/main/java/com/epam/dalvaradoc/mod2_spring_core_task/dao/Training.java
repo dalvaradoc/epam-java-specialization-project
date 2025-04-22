@@ -2,6 +2,10 @@ package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
 import java.sql.Date;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +13,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity(name = "trainings")
 public class Training {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private String trainingId;
   private String traineeId;
   private String trainerId;
   private String name;

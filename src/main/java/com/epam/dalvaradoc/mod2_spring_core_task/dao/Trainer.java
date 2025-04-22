@@ -1,5 +1,8 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,17 +10,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity(name = "trainers")
 public class Trainer extends User {
+  @Enumerated(EnumType.STRING)
   private TrainingType specialization;
 
   public Trainer(String firstName, String lastName, String username, String password, boolean isActive, String userId,
       TrainingType specialization) {
-    super(firstName, lastName, username, password, isActive, userId);
+    super(userId, firstName, lastName, username, password, isActive);
     this.specialization = specialization;
   }
 
   public Trainer(Trainer trainer){
-    super(trainer.getFirstName(), trainer.getLastName(), trainer.getUsername(), trainer.getPassword(), trainer.isActive(), trainer.getUserId());
+    super(trainer.getUserId(), trainer.getFirstName(), trainer.getLastName(), trainer.getUsername(), trainer.getPassword(), trainer.isActive());
     this.specialization = trainer.getSpecialization();
   }
 
@@ -27,27 +32,5 @@ public class Trainer extends User {
         + ", getFirstName()=" + getFirstName() + ", getLastName()=" + getLastName() + ", getPassword()=" + getPassword()
         + ", getUserId()=" + getUserId() + ", getUsername()=" + getUsername() + ", isActive()=" + isActive()
         + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = super.hashCode();
-    result = prime * result + ((specialization == null) ? 0 : specialization.hashCode());
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (!super.equals(obj))
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    Trainer other = (Trainer) obj;
-    if (specialization != other.specialization)
-      return false;
-    return true;
   }
 }

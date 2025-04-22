@@ -11,28 +11,33 @@ import org.springframework.stereotype.Service;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingRepository;
 
 @Service
 public class TrainingService {
-  private Map<String, Training> trainingMap;
+  private TrainingRepository trainingRepository;
+  private final TrainingMapper mapper = new TrainingMapper();
 
-  public Training getTrainingByName(String name) {
-    return trainingMap.get(name);
+  public TrainingDTO getTrainingByName(String name) {
+    return trainingRepository.findByName(name).map(mapper::toDTO).orElse(null);
   }
 
-  public List<Training> getTrainings() {
-    return trainingMap.values().stream().collect(Collectors.toList());
+  public List<TrainingDTO> getTrainings() {
+    return trainingRepository.findAll().stream().map(mapper::toDTO).collect(Collectors.toList());
   }
 
+  //Se podría mejorar usando queries en vez de streams
   public List<Training> getTrainings(String traineeId, String trainerId, String name, TrainingType type, Date date, Integer duration) {
-    return trainingMap.values().stream().filter(training -> 
-      checkTraineeId(training, traineeId) &&
-      checkTrainerId(training, trainerId) &&
-      checkName(training, name) &&
-      checkType(training, type) &&
-      checkDate(training, date) &&
-      checkDuration(training, duration)
-    ).collect(Collectors.toList());
+    return trainingRepository.findAll().stream()
+        .filter(training -> checkTraineeId(training, traineeId))
+        .filter(training -> checkTrainerId(training, trainerId))
+        .filter(training -> checkName(training, name))
+        .filter(training -> checkType(training, type))
+        .filter(training -> checkDate(training, date))
+        .filter(training -> checkDuration(training, duration))
+        .collect(Collectors.toList());
   }
 
   private boolean checkTraineeId(Training training, String traineeId){
@@ -55,13 +60,20 @@ public class TrainingService {
   }
 
   public Training createTraining(String traineeId, String trainerId, String name, TrainingType type, Date date, Integer duration) {
-    Training training = new Training(traineeId, trainerId, name, type, date, duration);
-    trainingMap.put(name, training);
+    Training training = new Training();
+    training.setTraineeId(traineeId);
+    training.setTrainerId(trainerId);
+    training.setName(name);
+    training.setType(type);
+    training.setDate(date);
+    training.setDuration(duration);
+
+    trainingRepository.save(training);
     return training;
   }
 
   @Autowired
-  public void setTrainingMap(Map<String, Training> trainingMap) {
-    this.trainingMap = trainingMap;
+  public void setTrainingRepository(TrainingRepository trainingRepository) {
+    this.trainingRepository = trainingRepository;
   }
 }

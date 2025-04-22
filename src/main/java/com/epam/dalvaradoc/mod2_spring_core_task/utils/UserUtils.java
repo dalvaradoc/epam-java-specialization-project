@@ -3,7 +3,11 @@ package com.epam.dalvaradoc.mod2_spring_core_task.utils;
 import java.util.Map;
 import java.util.Random;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.Repository;
+
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.User;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.UserRepository;
 
 public class UserUtils {
 
@@ -21,8 +25,8 @@ public class UserUtils {
     return saltStr;
   }
 
-  public static <V extends User> String createUsername(String firstName, String lastName, Map<String,V> userMap){
-    long repeated = userMap.values().stream().filter(o -> o.getFirstName().equals(firstName) && o.getLastName().equals(lastName)).count();
+  public static <V extends User> String createUsername(String firstName, String lastName, UserRepository repository) {
+    long repeated = repository.findByFirstNameAndLastName(firstName, lastName).size();
     return firstName + "." + lastName + (repeated > 0 ? "#" + (repeated+1) : "");
   }
 }
