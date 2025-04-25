@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.aop.CheckCredentials;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
@@ -12,11 +13,16 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserUtils;
+import com.epam.dalvaradoc.mod2_spring_core_task.validations.NameLikeStringConstraint;
+import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@Validated
 public class TrainerService {
   private TrainerRepository trainerRepository; 
   private UserUtils userUtils;
@@ -29,7 +35,7 @@ public class TrainerService {
   }
 
   @CheckCredentials
-  public TrainerDTO getTrainerById(String userId, String username, String password) {
+  public TrainerDTO getTrainerById(@NotNull String userId, @UsernameConstraint String username, @NotNull String password) {
     return Optional.ofNullable(userId)
         .map(trainerRepository::findById)
         .map(opt -> opt.orElse(null))
@@ -38,14 +44,14 @@ public class TrainerService {
   }
 
   @CheckCredentials
-  public TrainerDTO getTrainerByUsername(String username, String password) {
+  public TrainerDTO getTrainerByUsername(@UsernameConstraint String username, @NotNull String password) {
     return Optional.ofNullable(username)
         .map(trainerRepository::findByUsername)
         .map(mapper::toDTO)
         .orElse(null);
   }
 
-  public TrainerDTO createTrainer(String firstName, String lastName, TrainingType specialization){
+  public TrainerDTO createTrainer(@NameLikeStringConstraint String firstName, @NameLikeStringConstraint String lastName, @NotNull TrainingType specialization){
     String username = userUtils.createUsername(firstName, lastName);
     String password = UserUtils.getSaltString();
     
@@ -63,7 +69,7 @@ public class TrainerService {
   }
 
   @CheckCredentials
-  public boolean updateTrainer(Trainer trainer){
+  public boolean updateTrainer(@Valid @NotNull Trainer trainer){
     Optional<Trainer> trainerOptional = trainerRepository.findById(trainer.getUserId());
     if (trainerOptional.isEmpty()){
       return false;
@@ -82,7 +88,7 @@ public class TrainerService {
   }
 
   @CheckCredentials
-  public boolean changeActiveState(String userId, String username, String password) {
+  public boolean changeActiveState(@NotNull String userId, @UsernameConstraint String username, @NotNull String password) {
     Optional<Trainer> trainerOptional = trainerRepository.findById(userId);
     if (trainerOptional.isEmpty()){
       return false;
@@ -95,7 +101,7 @@ public class TrainerService {
   }
 
   @CheckCredentials
-  public boolean changePassword(String newPassword, String username, String password) {
+  public boolean changePassword(@NotNull String newPassword, @UsernameConstraint String username, @NotNull String password) {
     Trainer trainer = trainerRepository.findByUsername(username);
     if (trainer == null){
       return false;
@@ -106,15 +112,4 @@ public class TrainerService {
     LOGGER.info("Trainer password changed: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
     return true;
   }
-
-  // @CheckCredentials
-  // public boolean deleteTrainerByUsername(String username, String password) {
-  //   Trainer trainer = trainerRepository.findByUsername(username);
-  //   if (trainer == null){
-  //     return false;
-  //   }
-  //   trainerRepository.delete(trainer);
-  //   LOGGER.info("Trainer deleted: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
-  //   return true;
-  // }
 }

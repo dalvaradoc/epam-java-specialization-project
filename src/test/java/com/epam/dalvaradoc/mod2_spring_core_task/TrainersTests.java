@@ -18,6 +18,8 @@ import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingTypeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TrainerService;
 
+import jakarta.validation.ConstraintViolationException;
+
 @SpringBootTest
 class TrainersTests {
 	@Autowired
@@ -93,6 +95,12 @@ class TrainersTests {
 
 		trainerRepository.deleteById(trainer.getUserId());
 		trainerRepository.deleteById(trainer2.getUserId());
+	}
+
+	@Test
+	void createBadTrainerTest() {
+		assertThrows(ConstraintViolationException.class, () -> trainerService.createTrainer("Diego", "Alvaradosdasdj343843", trainingTypeRepository.findByName("AEROBIC")));
+		assertThrows(ConstraintViolationException.class, () -> trainerService.createTrainer("Diegox.#94", "Alvarado", trainingTypeRepository.findByName("AEROBIC")));
 	}
 
 	@Test

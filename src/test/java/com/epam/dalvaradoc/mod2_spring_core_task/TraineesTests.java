@@ -21,6 +21,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TraineeService;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
@@ -47,6 +48,12 @@ class TraineesTests {
 		assertEquals(traineeMapper.toDTO(traineeRepository.findById(trainee.getUserId()).get()), trainee);
 
 		traineeRepository.deleteById(trainee.getUserId());
+	}
+
+	@Test
+	void createBadTraineeTest() {
+		assertThrows(ConstraintViolationException.class,
+				() -> traineeService.createTrainee("John2381283", "Smith#2", "CL 1 # 1-2", Date.valueOf("2030-02-02")));
 	}
 
 	@Test
@@ -96,7 +103,7 @@ class TraineesTests {
 
 	@Test
 	void deleteTraineeTest() {
-		Trainee trainee = traineeMapper.toObject(traineeService.createTrainee("x", "x", "CL X # X - X", Date.valueOf("2000-02-02")));
+		Trainee trainee = traineeMapper.toObject(traineeService.createTrainee("xxx", "xxx", "CL X # X - X", Date.valueOf("2000-02-02")));
 		assertNotNull(trainee);
 		traineeService.deleteTraineeById(trainee.getUserId(), trainee.getUsername(), trainee.getPassword());
 		assertFalse(traineeRepository.findById(trainee.getUserId()).isPresent());
@@ -105,7 +112,7 @@ class TraineesTests {
 	@Test
 	@Transactional
 	void deleteByUsernameTest() {
-		Trainee trainee = traineeMapper.toObject(traineeService.createTrainee("x", "x", "CL X # X - X", Date.valueOf("2000-02-02")));
+		Trainee trainee = traineeMapper.toObject(traineeService.createTrainee("xxx", "xxx", "CL X # X - X", Date.valueOf("2000-02-02")));
 		assertNotNull(trainee);
 		traineeService.deleteTraineeByUsername(trainee.getUsername(), trainee.getPassword());
 		assertFalse(traineeRepository.findById(trainee.getUserId()).isPresent());

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.aop.CheckCredentials;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
@@ -12,11 +13,17 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserUtils;
+import com.epam.dalvaradoc.mod2_spring_core_task.validations.NameLikeStringConstraint;
+import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@Validated
 public class TraineeService {
   private TraineeRepository traineeRepository;
   private UserUtils userUtils;
@@ -29,7 +36,7 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public TraineeDTO getTraineeById(String id, String username, String password) {
+  public TraineeDTO getTraineeById(@NotNull String id, @UsernameConstraint String username, @NotNull String password) {
     return Optional.ofNullable(id)
         .map(traineeRepository::findById)
         .map(opt -> opt.orElse(null))
@@ -38,14 +45,14 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public TraineeDTO getTraineeByUsername(String username, String password) {
+  public TraineeDTO getTraineeByUsername(@UsernameConstraint String username, @NotNull String password) {
     return Optional.ofNullable(username)
         .map(traineeRepository::findByUsername)
         .map(mapper::toDTO)
         .orElse(null);
   }
 
-  public TraineeDTO createTrainee(String firstName, String lastName, String address, Date birthdate){
+  public TraineeDTO createTrainee(@NameLikeStringConstraint String firstName, @NameLikeStringConstraint String lastName, @NotNull String address, @Past Date birthdate){
     String username = userUtils.createUsername(firstName, lastName);
     String password = UserUtils.getSaltString();
     
@@ -63,7 +70,7 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public boolean updateTrainee(Trainee trainee){
+  public boolean updateTrainee(@Valid @NotNull Trainee trainee){
     Optional<Trainee> traineeOptional = traineeRepository.findById(trainee.getUserId());
 
     if(traineeOptional.isEmpty()){
@@ -82,7 +89,7 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public boolean changePassword(String newPassword, String username, String password) {
+  public boolean changePassword(@NotNull String newPassword, @UsernameConstraint String username, @NotNull String password) {
     Trainee trainee = traineeRepository.findByUsername(username);
     if (trainee == null){
       return false;
@@ -95,7 +102,7 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public boolean changeActiveState(String userId, String username, String password) {
+  public boolean changeActiveState(@NotNull String userId, @UsernameConstraint String username, @NotNull String password) {
     Optional<Trainee> traineeOptional = traineeRepository.findById(userId);
     if (traineeOptional.isEmpty()){
       return false;
@@ -108,13 +115,13 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public void deleteTraineeById(String userId, String username, String password) {
+  public void deleteTraineeById(@NotNull String userId, @UsernameConstraint String username, @NotNull String password) {
     traineeRepository.deleteById(userId);
     LOGGER.info("Trainee deleted: " + userId);
   }
 
   @CheckCredentials
-  public void deleteTraineeByUsername(String username, String password) {
+  public void deleteTraineeByUsername(@UsernameConstraint String username, @NotNull String password) {
     traineeRepository.deleteByUsername(username);
     LOGGER.info("Trainee deleted: " + username);
   }

@@ -3,6 +3,7 @@ package com.epam.dalvaradoc.mod2_spring_core_task;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Date;
@@ -18,6 +19,8 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingTypeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TrainingService;
+
+import jakarta.validation.ConstraintViolationException;
 
 @SpringBootTest
 class TrainingTests {
@@ -49,7 +52,7 @@ class TrainingTests {
   @Test
   void getTrainingsByTraineeNameTest() {
     assertEquals(2, trainingService.getTrainingsByTraineeUsername("Lenard.Pedgrift").size());
-    assertEquals(0, trainingService.getTrainingsByTraineeUsername("xxxxxx").size());
+    assertEquals(0, trainingService.getTrainingsByTraineeUsername("xxxxxx.xxxx#4").size());
 
     assertEquals(1, trainingService.getTrainingsByTraineeUsername("Lenard.Pedgrift", Date.valueOf("2025-01-01"), Date.valueOf("2026-12-31"), "Nobie.Linney", trainingTypeRepository.findByName("PLYOMETRICS")).size());
   }
@@ -57,7 +60,7 @@ class TrainingTests {
   @Test
   void getTrainingsByTrainerNameTest() {
     assertEquals(7, trainingService.getTrainingsByTrainerUsername("Stafford.Cicco").size());
-    assertEquals(0, trainingService.getTrainingsByTrainerUsername("xxxxxx").size());
+    assertEquals(0, trainingService.getTrainingsByTrainerUsername("xxxxxx.xxxx").size());
 
     assertEquals(1, trainingService.getTrainingsByTrainerUsername("Stafford.Cicco", Date.valueOf("2025-01-01"), Date.valueOf("2026-12-31"), "Cobby.Castagneri").size());
   }
@@ -79,6 +82,17 @@ class TrainingTests {
     assertEquals(training.getDuration(), entityTraining.getDuration());  
 
     trainingRepository.deleteById(training.getTrainingId());
+  }
+
+  @Test
+  void createBadTrainingTest() {
+    Trainee trainee = trainingRepository.findAll().get(0).getTrainee();
+    Trainer trainer = trainingRepository.findAll().get(0).getTrainer();
+
+    assertThrows(ConstraintViolationException.class, () -> trainingService.createTraining(null, trainer, "Nombre Cualquiera", trainingTypeRepository.findByName("CARDIO"), Date.valueOf("2025-04-21"), 10));
+    assertThrows(ConstraintViolationException.class, () -> trainingService.createTraining(trainee, null, "Nombre Cualquiera", trainingTypeRepository.findByName("CARDIO"), Date.valueOf("2025-04-21"), 10));
+    assertThrows(ConstraintViolationException.class, () -> trainingService.createTraining(trainee, trainer, "Nombre Cualquiera", null, Date.valueOf("2025-04-21"), 10));
+    assertThrows(ConstraintViolationException.class, () -> trainingService.createTraining(trainee, trainer, "Nombre Cualquiera", trainingTypeRepository.findByName("CARDIO"), Date.valueOf("2025-04-21"), -1));
   }
 
 }
