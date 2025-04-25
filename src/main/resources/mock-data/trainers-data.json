@@ -1,8 +1,0 @@
-[{"userId":1,"firstName":"Brady","lastName":"Verick","username":"Brady.Verick","specialization":"CARDIO","active":false},
-{"userId":2,"firstName":"Stafford","lastName":"Cicco","username":"Stafford.Cicco","specialization":"CARDIO","active":true},
-{"userId":3,"firstName":"Nobie","lastName":"Linney","username":"Nobie.Linney","specialization":"INTERVAL","active":false},
-{"userId":4,"firstName":"Prue","lastName":"Nawton","username":"Prue.Nawton","specialization":"CIRCUIT","active":true},
-{"userId":5,"firstName":"Caryl","lastName":"Shory","username":"Caryl.Shory","specialization":"CARDIO","active":true},
-{"userId":6,"firstName":"Rora","lastName":"Loffhead","username":"Rora.Loffhead","specialization":"WEIGHT","active":true},
-{"userId":7,"firstName":"Nat","lastName":"Halpeine","username":"Nat.Halpeine","specialization":"PLYOMETRICS","active":false},
-{"userId":8,"firstName":"Faunie","lastName":"Hauck","username":"Faunie.Hauck","specialization":"CIRCUIT","active":false}]

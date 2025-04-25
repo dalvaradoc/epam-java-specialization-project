@@ -39,12 +39,4 @@ public class Trainer extends User {
     super(trainer.getUserId(), trainer.getFirstName(), trainer.getLastName(), trainer.getUsername(), trainer.getPassword(), trainer.isActive());
     this.specialization = trainer.getSpecialization();
   }
-
-  @Override
-  public String toString() {
-    return "Trainer [specialization=" + specialization + ", getSpecialization()=" + getSpecialization()
-        + ", getFirstName()=" + getFirstName() + ", getLastName()=" + getLastName() + ", getPassword()=" + getPassword()
-        + ", getUserId()=" + getUserId() + ", getUsername()=" + getUsername() + ", isActive()=" + isActive()
-        + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
-  }
 }

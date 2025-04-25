@@ -24,9 +24,4 @@ public class TrainingType {
 
   @OneToMany(mappedBy = "type", fetch = FetchType.LAZY)
   private List<Training> training = new ArrayList<>();
-
-  @Override
-  public String toString() {
-    return "TrainingType [trainingTypeId=" + trainingTypeId + ", name=" + name + "]";
-  }
 }

@@ -41,10 +41,4 @@ public class Training {
     this.date = training.date;
     this.duration = training.duration;
   }
-
-  @Override
-  public String toString() {
-    return "Training [trainingId=" + trainingId + ", traineeId=" + trainee + ", trainerId=" + trainer + ", name="
-        + name + ", type=" + type + ", date=" + date + ", duration=" + duration + "]";
-  }
 }

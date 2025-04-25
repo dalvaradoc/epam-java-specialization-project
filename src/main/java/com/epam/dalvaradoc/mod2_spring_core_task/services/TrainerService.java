@@ -38,7 +38,7 @@ public class TrainerService {
   public TrainerDTO getTrainerById(@NotNull String userId, @UsernameConstraint String username, @NotNull String password) {
     return Optional.ofNullable(userId)
         .map(trainerRepository::findById)
-        .map(opt -> opt.orElse(null))
+        .flatMap(opt -> opt)
         .map(mapper::toDTO)
         .orElse(null);
   }

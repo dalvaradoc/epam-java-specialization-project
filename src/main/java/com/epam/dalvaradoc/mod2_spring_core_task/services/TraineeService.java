@@ -39,7 +39,7 @@ public class TraineeService {
   public TraineeDTO getTraineeById(@NotNull String id, @UsernameConstraint String username, @NotNull String password) {
     return Optional.ofNullable(id)
         .map(traineeRepository::findById)
-        .map(opt -> opt.orElse(null))
+        .flatMap(opt -> opt)
         .map(mapper::toDTO)
         .orElse(null);
   }

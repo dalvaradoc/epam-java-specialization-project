@@ -48,12 +48,4 @@ public class Trainee extends User {
     this.birthdate = trainee.getBirthdate();
     this.address = trainee.getAddress();
   }
-
-  @Override
-  public String toString() {
-    return "Trainee [birthdate=" + birthdate + ", address=" + address + ", getFirstName()=" + getFirstName()
-        + ", getLastName()=" + getLastName() + ", getPassword()=" + getPassword() + ", getUserId()=" + getUserId()
-        + ", getUsername()=" + getUsername() + ", isActive()=" + isActive() + ", getClass()=" + getClass()
-        + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
-  }
 }
