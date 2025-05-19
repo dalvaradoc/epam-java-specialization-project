@@ -13,15 +13,18 @@ import org.springframework.validation.annotation.Validated;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.aop.CheckCredentials;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
+import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserUtils;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.NameLikeStringConstraint;
@@ -39,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TraineeService {
   private TraineeRepository traineeRepository;
   private TrainingRepository trainingRepository;
+  private TrainerRepository trainerRepository;
 
   private UserUtils userUtils;
   private final TraineeMapper mapper = new TraineeMapper();
@@ -46,9 +50,10 @@ public class TraineeService {
   
 
   @Autowired
-  public TraineeService(TraineeRepository traineeRepository, TrainingRepository trainingRepository, UserUtils userUtils) {
+  public TraineeService(TraineeRepository traineeRepository, TrainingRepository trainingRepository, TrainerRepository trainerRepository, UserUtils userUtils) {
     this.traineeRepository = traineeRepository;
     this.trainingRepository = trainingRepository;
+    this.trainerRepository = trainerRepository;
     this.userUtils = userUtils;
   }
 
@@ -165,5 +170,29 @@ public class TraineeService {
   public void deleteTraineeByUsername(@UsernameConstraint String username, @NotNull String password) {
     traineeRepository.deleteByUsername(username);
     LOGGER.info("Trainee deleted: " + username);
+  }
+
+  @CheckCredentials
+  public List<TrainerDTO> getTrainersNotAssignedToTrainee(@Valid AuthenticationDTO auth) {
+    Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
+    if (trainee == null) {
+      return null;
+    }
+    List<Trainer> allTrainers = trainerRepository.findAll();
+
+    if (trainee.getTrainers() == null){
+      return allTrainers
+        .stream()
+        .filter(trainer -> trainer.isActive())
+        .map(trainerMapper::toDTO)
+        .toList();
+    }
+
+    List<TrainerDTO> trainers = allTrainers
+      .stream()
+      .filter(trainer -> trainer.isActive() && !trainee.getTrainers().contains(trainer))
+      .map(trainerMapper::toDTO)
+      .toList();
+    return trainers;
   }
 }

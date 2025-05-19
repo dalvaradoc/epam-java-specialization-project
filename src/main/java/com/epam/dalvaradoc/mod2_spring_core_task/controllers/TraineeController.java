@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TraineeService;
 
@@ -41,6 +42,11 @@ public class TraineeController {
     @PostMapping
     public ResponseEntity<AuthenticationDTO> registerTrainee(@Valid @RequestBody TraineeDTO dto) {
         return ResponseEntity.ok(traineeService.createTrainee( dto.getFirstName(), dto.getLastName(), dto.getAddress(), dto.getBirthdate()));
+    }
+
+    @GetMapping("/not-assigned-trainers")
+    public ResponseEntity<List<TrainerDTO>> getTrainersNotAssignedToTrainee(@Valid @RequestBody AuthenticationDTO auth) {
+        return ResponseEntity.ok(traineeService.getTrainersNotAssignedToTrainee(auth));
     }
     
     @GetMapping("/{username}")
