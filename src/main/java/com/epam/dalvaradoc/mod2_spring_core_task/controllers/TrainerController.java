@@ -60,4 +60,9 @@ public class TrainerController {
         filters.put("trainingType", trainingType);
         return ResponseEntity.ok(trainerService.getTrainings(filters, auth));
     }
+
+    @PatchMapping("/{username}/set-active-state") 
+    public void changeActiveState(@RequestParam boolean active, @Valid @RequestBody AuthenticationDTO auth) {
+        ResponseEntity.ok(trainerService.changeActiveState(active, auth));
+    }
 }

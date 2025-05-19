@@ -99,7 +99,7 @@ public class TraineeController {
         return ResponseEntity.ok(traineeService.getTrainings(filters, auth));
     }
 
-    @PatchMapping("/{username}/changeActiveState") 
+    @PatchMapping("/{username}/set-active-state") 
     public void changeActiveState(@RequestParam boolean active, @Valid @RequestBody AuthenticationDTO auth) {
         ResponseEntity.ok(traineeService.changeActiveState(active, auth));
     }

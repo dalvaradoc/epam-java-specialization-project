@@ -159,7 +159,7 @@ public class TraineeService {
     Trainee trainee = traineeOptional.get();
     trainee.setActive(active);
     traineeRepository.save(trainee);
-    LOGGER.info("Trainee active state changed: " + trainee.toString());
+    LOGGER.info("Trainer active state changed: " + trainee.getUsername() + trainee.isActive());
     return trainee.isActive();
   }
 

@@ -115,15 +115,15 @@ public class TrainerService {
   }
 
   @CheckCredentials
-  public boolean changeActiveState(@NotNull String userId, @UsernameConstraint String username, @NotNull String password) {
-    Optional<Trainer> trainerOptional = trainerRepository.findById(userId);
+  public boolean changeActiveState(boolean active, @Valid AuthenticationDTO auth) {
+    Optional<Trainer> trainerOptional = Optional.ofNullable(trainerRepository.findByUsername(auth.getUsername()));
     if (trainerOptional.isEmpty()){
       return false;
     }
     Trainer trainer = trainerOptional.get();
-    trainer.setActive(!trainer.isActive());
+    trainer.setActive(active);
     trainerRepository.save(trainer);
-    LOGGER.info("Trainer active state changed: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
+    LOGGER.info("Trainer active state changed: " + trainer.getUsername() + trainer.isActive());
     return trainer.isActive();
   }
 
