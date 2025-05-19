@@ -21,18 +21,16 @@ import lombok.Data;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TrainingDTO {
-  //It should be validated with UUID, but for simplicity of test it can receive any id
-  private String trainingId;
   @NotNull
   @Valid
-  private Trainee trainee;
+  private TraineeDTO trainee;
   @NotNull
   @Valid
-  private Trainer trainer;
+  private TrainerDTO trainer;
   @Length(min = 2, max = 50, message = "Training name must be between 2 and 50 characters")
   private String name;
   @NotNull
-  private TrainingType type;
+  private TrainingTypeDTO type;
   private Date date;
   @Min(value = 1, message = "Duration must be at least 1")
   private int duration;

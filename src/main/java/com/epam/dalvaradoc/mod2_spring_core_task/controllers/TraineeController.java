@@ -17,6 +17,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeTrainersListDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TraineeService;
@@ -71,4 +72,8 @@ public class TraineeController {
         return ResponseEntity.ok(traineeService.updateTrainersList(dto.getTrainersUsernames(), dto.getAuth()));
     }
     
+    @GetMapping("/{username}/trainings")
+    public ResponseEntity<List<TrainingDTO>> getTrainings(@Valid @RequestBody AuthenticationDTO auth) {
+        return ResponseEntity.ok(traineeService.getTrainings(auth));
+    }
 }

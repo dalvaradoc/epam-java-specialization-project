@@ -49,6 +49,7 @@ public class TraineeService {
   private UserUtils userUtils;
   private final TraineeMapper mapper = new TraineeMapper();
   private final TrainerMapper trainerMapper = new TrainerMapper();
+  private final TrainingMapper trainingMapper = new TrainingMapper();
   
 
   @Autowired
@@ -222,6 +223,27 @@ public class TraineeService {
     return trainee.getTrainers()
       .stream()
       .map(trainerMapper::toDTO)
+      .toList();
+  }
+
+  @CheckCredentials
+  public List<TrainingDTO> getTrainings(@Valid AuthenticationDTO auth) {
+    Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
+    if (trainee == null) {
+      return List.of();
+    }
+
+    return trainee.getTrainings()
+      .stream()
+      .map(trainingMapper::toDTO)
+      .map(dto -> {
+        dto.setTrainee(null);
+        dto.setTrainer(TrainerDTO.builder()
+            .firstName(dto.getTrainer().getFirstName())
+            .lastName(dto.getTrainer().getLastName())
+            .build());
+        return dto;
+      })
       .toList();
   }
 }

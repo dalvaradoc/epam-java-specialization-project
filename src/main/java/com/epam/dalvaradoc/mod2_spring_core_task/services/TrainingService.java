@@ -12,6 +12,8 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingRepository;
@@ -25,7 +27,10 @@ import jakarta.validation.constraints.NotNull;
 @Validated
 public class TrainingService {
   private TrainingRepository trainingRepository;
+
   private final TrainingMapper mapper = new TrainingMapper();
+  private final TraineeMapper traineeMapper = new TraineeMapper();
+  private final TrainerMapper trainerMapper = new TrainerMapper();
 
   @Autowired
   public TrainingService(TrainingRepository trainingRepository) {
@@ -73,16 +78,14 @@ public class TrainingService {
   }
 
   public TrainingDTO createTraining(@Valid @NotNull Trainee trainee, @Valid @NotNull Trainer trainer, @NotNull String name, @NotNull TrainingType type, Date date, @Min(value = 1) Integer duration) {
-    TrainingDTO trainingDTO = TrainingDTO.builder()
-        .trainee(trainee)
-        .trainer(trainer)
-        .name(name)
-        .type(type)
-        .date(date)
-        .duration(duration)
-        .build();
+    Training training = new Training();
+    training.setTrainee(trainee);
+    training.setTrainer(trainer);
+    training.setName(name);
+    training.setType(type);
+    training.setDate(date);
+    training.setDuration(duration);
 
-    Training training = trainingRepository.save(mapper.toObject(trainingDTO));
     return mapper.toDTO(training);
   }
 }
