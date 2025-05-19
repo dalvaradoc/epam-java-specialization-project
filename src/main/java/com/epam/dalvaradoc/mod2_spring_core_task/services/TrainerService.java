@@ -1,6 +1,8 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.services;
 
+import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +11,13 @@ import org.springframework.validation.annotation.Validated;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.aop.CheckCredentials;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
+import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTrainerDTO;
@@ -35,6 +41,7 @@ public class TrainerService {
   private UserUtils userUtils;
   private final TrainerMapper mapper = new TrainerMapper();
   private final TrainingTypeMapper trainingTypeMapper = new TrainingTypeMapper();
+  private final TrainingMapper trainingMapper = new TrainingMapper();
 
   @Autowired
   public TrainerService(TrainerRepository trainerRepository, TrainingTypeRepository trainingTypeRepository, UserUtils userUtils) {
@@ -130,6 +137,56 @@ public class TrainerService {
     trainer.setPassword(newPassword);
     trainerRepository.save(trainer);
     LOGGER.info("Trainer password changed: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
+    return true;
+  }
+
+  @CheckCredentials
+  public List<TrainingDTO> getTrainings(Map<String,Object> filters, @Valid AuthenticationDTO auth) {
+    Trainer trainer = trainerRepository.findByUsername(auth.getUsername());
+    if (trainer == null) {
+      return List.of();
+    }
+
+    return trainer.getTrainings()
+      .stream()
+      .filter(training -> getTrainingFiltersPredicate(filters, training))
+      .map(trainingMapper::toDTO)
+      .map(dto -> {
+        dto.setTrainee(TraineeDTO.builder()
+            .firstName(dto.getTrainee().getFirstName())
+            .lastName(dto.getTrainee().getLastName())
+            .build());
+        dto.setTrainer(null);
+        return dto;
+      })
+      .toList();
+  }
+
+  private boolean getTrainingFiltersPredicate(Map<String, Object> filters, Training training) {
+    if (filters.get("from") != null) {
+      Date from = (Date) filters.get("from");
+      if (training.getDate().before(from)){
+        return false;
+      }
+    }
+    if (filters.get("to") != null) {
+      Date to = (Date) filters.get("to");
+      if (training.getDate().after(to)){
+        return false;
+      }
+    }
+    if (filters.get("trainerName") != null) {
+      String trainerName = (String) filters.get("trainerName");
+      if (!training.getTrainer().getFirstName().equals(trainerName) && !training.getTrainer().getLastName().equals(trainerName)){
+        return false;
+      }
+    }
+    if (filters.get("trainingType") != null) {
+      String trainingType = (String) filters.get("trainingType");
+      if (!training.getType().getName().equals(trainingType)){
+        return false;
+      }
+    }
     return true;
   }
 }

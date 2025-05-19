@@ -83,7 +83,7 @@ public class TraineeController {
     @GetMapping("/{username}/trainings")
     public ResponseEntity<List<TrainingDTO>> getTrainings(@RequestParam(required = false) Date from,
             @RequestParam(required = false) Date to, @RequestParam(required = false) String trainerName,
-            @RequestParam(required = false) TrainingTypeDTO trainingType, @Valid @RequestBody AuthenticationDTO auth) {
+            @RequestParam(required = false) String trainingType, @Valid @RequestBody AuthenticationDTO auth) {
 
         Map<String, Object> filters = new HashMap<>();
         filters.put("from", from);

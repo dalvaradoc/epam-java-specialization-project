@@ -192,12 +192,11 @@ public class TraineeService {
         .toList();
     }
 
-    List<TrainerDTO> trainers = allTrainers
+    return allTrainers
       .stream()
       .filter(trainer -> trainer.isActive() && !trainee.getTrainers().contains(trainer))
       .map(trainerMapper::toDTO)
       .toList();
-    return trainers;
   }
 
   @CheckCredentials
