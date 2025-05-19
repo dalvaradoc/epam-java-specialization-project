@@ -20,6 +20,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.errors.BadCredentialsException;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
@@ -40,8 +41,7 @@ public class TrainingService {
   private TrainerRepository trainerRepository;
 
   private final TrainingMapper mapper = new TrainingMapper();
-  private final TraineeMapper traineeMapper = new TraineeMapper();
-  private final TrainerMapper trainerMapper = new TrainerMapper();
+  private final TrainingTypeMapper trainingTypeMapper = new TrainingTypeMapper();
 
   @Autowired
   public TrainingService(TrainingRepository trainingRepository, TrainingTypeRepository trainingTypeRepository,
@@ -123,5 +123,11 @@ public class TrainingService {
     training.setDuration(dto.getDuration());
 
     return mapper.toDTO(training);
+  }
+
+
+  @CheckCredentials
+  public List<TrainingTypeDTO> getAllTrainingTypes(@Valid AuthenticationDTO auth) {
+    return trainingTypeRepository.findAll().stream().map(trainingTypeMapper::toDTO).toList();
   }
 }
