@@ -7,6 +7,7 @@ public class TrainingTypeMapper implements Mapper<TrainingType, TrainingTypeDTO>
   @Override
   public TrainingType toObject(TrainingTypeDTO dto) {
     TrainingType trainingType = new TrainingType();
+    trainingType.setTrainingTypeId(dto.getId());
     trainingType.setName(dto.getName());
     return trainingType;
   }
