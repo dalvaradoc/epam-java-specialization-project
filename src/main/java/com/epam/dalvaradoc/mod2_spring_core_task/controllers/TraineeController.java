@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -96,5 +97,10 @@ public class TraineeController {
         filters.put("trainerName", trainerName);
         filters.put("trainingType", trainingType);
         return ResponseEntity.ok(traineeService.getTrainings(filters, auth));
+    }
+
+    @PatchMapping("/{username}/changeActiveState") 
+    public void changeActiveState(@RequestParam boolean active, @Valid @RequestBody AuthenticationDTO auth) {
+        ResponseEntity.ok(traineeService.changeActiveState(active, auth));
     }
 }

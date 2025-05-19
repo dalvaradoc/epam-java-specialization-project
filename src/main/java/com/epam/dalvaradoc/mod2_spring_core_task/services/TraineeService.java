@@ -151,13 +151,13 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public boolean changeActiveState(@NotNull String userId, @UsernameConstraint String username, @NotNull String password) {
-    Optional<Trainee> traineeOptional = traineeRepository.findById(userId);
+  public boolean changeActiveState(boolean active, @Valid AuthenticationDTO auth) {
+    Optional<Trainee> traineeOptional = Optional.ofNullable(traineeRepository.findByUsername(auth.getUsername()));
     if (traineeOptional.isEmpty()){
       return false;
     }
     Trainee trainee = traineeOptional.get();
-    trainee.setActive(!trainee.isActive());
+    trainee.setActive(active);
     traineeRepository.save(trainee);
     LOGGER.info("Trainee active state changed: " + trainee.toString());
     return trainee.isActive();
