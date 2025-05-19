@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -227,7 +228,7 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public List<TrainingDTO> getTrainings(@Valid AuthenticationDTO auth) {
+  public List<TrainingDTO> getTrainings(Map<String,Object> filters, @Valid AuthenticationDTO auth) {
     Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
     if (trainee == null) {
       return List.of();
@@ -235,6 +236,7 @@ public class TraineeService {
 
     return trainee.getTrainings()
       .stream()
+      .filter(training -> getTrainingFiltersPredicate(filters, training))
       .map(trainingMapper::toDTO)
       .map(dto -> {
         dto.setTrainee(null);
@@ -245,5 +247,34 @@ public class TraineeService {
         return dto;
       })
       .toList();
+  }
+
+
+  private boolean getTrainingFiltersPredicate(Map<String, Object> filters, Training training) {
+    if (filters.get("from") != null) {
+      Date from = (Date) filters.get("from");
+      if (training.getDate().before(from)){
+        return false;
+      }
+    }
+    if (filters.get("to") != null) {
+      Date to = (Date) filters.get("to");
+      if (training.getDate().after(to)){
+        return false;
+      }
+    }
+    if (filters.get("trainerName") != null) {
+      String trainerName = (String) filters.get("trainerName");
+      if (!training.getTrainer().getFirstName().equals(trainerName) && !training.getTrainer().getLastName().equals(trainerName)){
+        return false;
+      }
+    }
+    if (filters.get("trainingType") != null) {
+      String trainingType = (String) filters.get("trainingType");
+      if (!training.getType().getName().equals(trainingType)){
+        return false;
+      }
+    }
+    return true;
   }
 }
