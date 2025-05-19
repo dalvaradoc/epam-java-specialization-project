@@ -24,5 +24,10 @@ public class GlobalControllerExceptionHandler {
   public void handleConstraintViolationException(Exception e){
     LOGGER.error("The validation of a parameter failed: " + e.getMessage());
   }
+
+  @ResponseStatus(value=HttpStatus.BAD_REQUEST)  // 401
+  @ExceptionHandler(IllegalArgumentException.class)
+  public void badArguments() {
+  }
 }
 

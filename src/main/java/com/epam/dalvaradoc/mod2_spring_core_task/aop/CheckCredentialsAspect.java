@@ -31,8 +31,8 @@ public class CheckCredentialsAspect {
   @Around("@annotation(CheckCredentials)")
   public Object checkCredentials(ProceedingJoinPoint joinPoint) throws Throwable {
     Object[] args = joinPoint.getArgs();
-    if (args.length == 0 && !checkIfUsernameAndPasswordPassed(args) && !checkIfUserPassed(args)
-        && !checkIfAuthenticationDTOPassed(args)) {
+    if (args.length == 0 || (!checkIfUsernameAndPasswordPassed(args) && !checkIfUserPassed(args)
+        && !checkIfAuthenticationDTOPassed(args))) {
       LOGGER.error("Invalid method arguments for @CheckCredentials");
       throw new IllegalArgumentException("Invalid method arguments for @CheckCredentials");
     }
@@ -71,10 +71,10 @@ public class CheckCredentialsAspect {
   }
 
   private boolean checkIfUserPassed(Object[] args) {
-    return User.class.isAssignableFrom(args[args.length - 1].getClass());
+    return args[args.length - 1] != null &&  User.class.isAssignableFrom(args[args.length - 1].getClass());
   }
 
   private boolean checkIfAuthenticationDTOPassed(Object[] args) {
-    return AuthenticationDTO.class.isAssignableFrom(args[args.length - 1].getClass());
+    return  args[args.length - 1] != null && AuthenticationDTO.class.isAssignableFrom(args[args.length - 1].getClass());
   }
 }

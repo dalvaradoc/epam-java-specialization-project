@@ -11,7 +11,8 @@ import jakarta.validation.Payload;
 
 @Documented
 @Constraint(validatedBy = UsernameValidator.class)
-@Target( { ElementType.FIELD, ElementType.PARAMETER })
+@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR,
+    ElementType.PARAMETER, ElementType.TYPE_USE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UsernameConstraint {
   String message() default "Username must follow the template firstName.lastName";

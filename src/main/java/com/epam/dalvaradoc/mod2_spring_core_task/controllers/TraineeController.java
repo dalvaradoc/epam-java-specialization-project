@@ -18,6 +18,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeTrainersListDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TraineeService;
 
 import jakarta.validation.Valid;
@@ -44,11 +45,6 @@ public class TraineeController {
         return ResponseEntity.ok(traineeService.createTrainee( dto.getFirstName(), dto.getLastName(), dto.getAddress(), dto.getBirthdate()));
     }
 
-    @GetMapping("/not-assigned-trainers")
-    public ResponseEntity<List<TrainerDTO>> getTrainersNotAssignedToTrainee(@Valid @RequestBody AuthenticationDTO auth) {
-        return ResponseEntity.ok(traineeService.getTrainersNotAssignedToTrainee(auth));
-    }
-    
     @GetMapping("/{username}")
     public ResponseEntity<TraineeDTO> getTraineeByUsername(@PathVariable String username, @Valid @RequestBody AuthenticationDTO auth) {
         return ResponseEntity.ok(traineeService.getTraineeByUsername(auth));
@@ -64,4 +60,15 @@ public class TraineeController {
         traineeService.deleteTraineeByUsername(auth.getUsername(), auth.getPassword());
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{username}/not-assigned-trainers")
+    public ResponseEntity<List<TrainerDTO>> getTrainersNotAssignedToTrainee(@PathVariable String username, @Valid @RequestBody AuthenticationDTO auth) {
+        return ResponseEntity.ok(traineeService.getTrainersNotAssignedToTrainee(auth));
+    }
+
+    @PutMapping("/{username}/trainers-list")
+    public ResponseEntity<List<TrainerDTO>> updateTrainersList(@Valid @RequestBody UpdateTraineeTrainersListDTO dto) {
+        return ResponseEntity.ok(traineeService.updateTrainersList(dto.getTrainersUsernames(), dto.getAuth()));
+    }
+    
 }

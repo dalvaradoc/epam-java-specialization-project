@@ -64,6 +64,10 @@ public class TrainerService {
     return Optional.ofNullable(auth.getUsername())
         .map(trainerRepository::findByUsername)
         .map(mapper::toDTO)
+        .map(trainer -> {
+          trainer.setAuth(null);
+          return trainer;
+        })
         .orElse(null);
   }
 

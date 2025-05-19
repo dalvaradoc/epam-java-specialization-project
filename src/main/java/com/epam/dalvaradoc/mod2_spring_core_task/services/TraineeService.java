@@ -1,7 +1,9 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.services;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -194,5 +196,32 @@ public class TraineeService {
       .map(trainerMapper::toDTO)
       .toList();
     return trainers;
+  }
+
+  @CheckCredentials
+  public List<TrainerDTO> updateTrainersList(List<String> trainersUsernames, @Valid AuthenticationDTO auth) {
+    Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
+    if (trainee == null) {
+      return null;
+    }
+
+    if (trainee.getTrainers() == null){
+      trainee.setTrainers(new HashSet<>());
+    }
+
+    trainersUsernames.forEach(trainerUsername -> {
+      Trainer trainer = trainerRepository.findByUsername(trainerUsername);
+      if (trainer != null) {
+        trainee.getTrainers().add(trainer);
+      }
+    });
+
+    traineeRepository.save(trainee);
+    LOGGER.info("Trainee trainers list updated: " + trainee.getTrainers().toString());
+
+    return trainee.getTrainers()
+      .stream()
+      .map(trainerMapper::toDTO)
+      .toList();
   }
 }
