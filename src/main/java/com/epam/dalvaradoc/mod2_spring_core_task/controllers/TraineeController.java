@@ -56,9 +56,9 @@ public class TraineeController {
         return ResponseEntity.ok(traineeService.updateTrainee(dto, dto.getAuth()));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTrainee(@PathVariable String id, @Valid @RequestBody AuthenticationDTO auth) {
-        traineeService.deleteTraineeById(id, auth.getUsername(), auth.getPassword());
+    @DeleteMapping
+    public ResponseEntity<Void> deleteTrainee(@Valid @RequestBody AuthenticationDTO auth) {
+        traineeService.deleteTraineeByUsername(auth.getUsername(), auth.getPassword());
         return ResponseEntity.noContent().build();
     }
 }

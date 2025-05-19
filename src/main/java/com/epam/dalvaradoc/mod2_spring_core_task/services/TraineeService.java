@@ -27,6 +27,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserUtils;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.NameLikeStringConstraint;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -156,6 +157,7 @@ public class TraineeService {
   }
 
   @CheckCredentials
+  @Transactional
   public void deleteTraineeByUsername(@UsernameConstraint String username, @NotNull String password) {
     traineeRepository.deleteByUsername(username);
     LOGGER.info("Trainee deleted: " + username);
