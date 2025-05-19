@@ -4,19 +4,27 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import com.epam.dalvaradoc.mod2_spring_core_task.aop.CheckCredentials;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.errors.BadCredentialsException;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingRepository;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingTypeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
 
 import jakarta.validation.Valid;
@@ -27,14 +35,21 @@ import jakarta.validation.constraints.NotNull;
 @Validated
 public class TrainingService {
   private TrainingRepository trainingRepository;
+  private TrainingTypeRepository trainingTypeRepository;
+  private TraineeRepository traineeRepository;
+  private TrainerRepository trainerRepository;
 
   private final TrainingMapper mapper = new TrainingMapper();
   private final TraineeMapper traineeMapper = new TraineeMapper();
   private final TrainerMapper trainerMapper = new TrainerMapper();
 
   @Autowired
-  public TrainingService(TrainingRepository trainingRepository) {
+  public TrainingService(TrainingRepository trainingRepository, TrainingTypeRepository trainingTypeRepository,
+      TraineeRepository traineeRepository, TrainerRepository trainerRepository) {
     this.trainingRepository = trainingRepository;
+    this.trainingTypeRepository = trainingTypeRepository;
+    this.traineeRepository = traineeRepository;
+    this.trainerRepository = trainerRepository;
   }
 
   public TrainingDTO getTrainingByName(@NotNull String name) {
@@ -71,20 +86,41 @@ public class TrainingService {
   }
 
   public List<TrainingDTO> getTrainingsByTrainerUsername(@UsernameConstraint String trainerUsername, Date from, Date to, @UsernameConstraint String traineeUsername) {
-    return Optional.ofNullable(trainerUsername)
-        .map(username -> trainingRepository.findAllByTrainerUsername(trainerUsername, from, to, traineeUsername))
+    return Optional.ofNullable(trainerUsername) .map(username -> trainingRepository.findAllByTrainerUsername(trainerUsername, from, to, traineeUsername))
         .map(list -> list.stream().map(mapper::toDTO).toList())
         .orElse(null);
   }
 
-  public TrainingDTO createTraining(@Valid @NotNull Trainee trainee, @Valid @NotNull Trainer trainer, @NotNull String name, @NotNull TrainingType type, Date date, @Min(value = 1) Integer duration) {
+  @CheckCredentials
+  public TrainingDTO createTraining(@Valid TrainingDTO dto, @Valid AuthenticationDTO auth) {
+    Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
+    Trainer trainer = trainerRepository.findByUsername(auth.getUsername());
+
+    if (trainee == null && trainer == null) {
+      throw new IllegalArgumentException("User not found");
+    }
+
+    if (trainee != null && dto.getTrainee().getAuth() != null && !dto.getAuth().getUsername().equals(dto.getTrainee().getAuth().getUsername())) {
+      throw new BadCredentialsException("Trainee username does not match");
+    }
+    if (trainer != null && dto.getTrainer().getAuth() != null && !dto.getAuth().getUsername().equals(dto.getTrainer().getAuth().getUsername())) {
+      throw new BadCredentialsException("Trainee username does not match");
+    }
+
+    trainee = trainee == null ? traineeRepository.findByUsername(dto.getTrainee().getAuth().getUsername()) : trainee;
+    trainer = trainer == null ? trainerRepository.findByUsername(dto.getTrainer().getAuth().getUsername()) : trainer;
+
+    if (trainee == null || trainer == null) {
+      throw new IllegalArgumentException("User not found");
+    }
+
     Training training = new Training();
     training.setTrainee(trainee);
     training.setTrainer(trainer);
-    training.setName(name);
-    training.setType(type);
-    training.setDate(date);
-    training.setDuration(duration);
+    training.setName(dto.getName());
+    training.setType(trainingTypeRepository.findByName(dto.getType().getName()));
+    training.setDate(dto.getDate());
+    training.setDuration(dto.getDuration());
 
     return mapper.toDTO(training);
   }

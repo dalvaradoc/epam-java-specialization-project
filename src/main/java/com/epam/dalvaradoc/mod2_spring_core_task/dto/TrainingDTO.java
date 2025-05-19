@@ -21,11 +21,10 @@ import lombok.Data;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TrainingDTO {
+  private AuthenticationDTO auth;
   @NotNull
-  @Valid
   private TraineeDTO trainee;
   @NotNull
-  @Valid
   private TrainerDTO trainer;
   @Length(min = 2, max = 50, message = "Training name must be between 2 and 50 characters")
   private String name;

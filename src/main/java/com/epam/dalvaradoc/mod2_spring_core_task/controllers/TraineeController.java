@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
@@ -26,6 +27,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeTrainersListDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TraineeService;
+import com.epam.dalvaradoc.mod2_spring_core_task.services.TrainingService;
 
 import jakarta.validation.Valid;
 
@@ -34,11 +36,14 @@ import jakarta.validation.Valid;
 public class TraineeController {
 
     private final TraineeService traineeService;
+    private final TrainingService trainingService;
+
     private final TraineeMapper mapper = new TraineeMapper();
 
     @Autowired
-    public TraineeController(TraineeService traineeService) {
+    public TraineeController(TraineeService traineeService, TrainingService trainingService) {
         this.traineeService = traineeService;
+        this.trainingService = trainingService;
     }
 
     @GetMapping
