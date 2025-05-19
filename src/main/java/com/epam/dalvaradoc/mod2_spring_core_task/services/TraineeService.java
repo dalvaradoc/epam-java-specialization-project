@@ -84,7 +84,7 @@ public class TraineeService {
         .orElse(null);
   }
 
-  public TraineeDTO createTrainee(@NameLikeStringConstraint String firstName, @NameLikeStringConstraint String lastName, @NotNull String address, @Past Date birthdate){
+  public AuthenticationDTO createTrainee(@NameLikeStringConstraint String firstName, @NameLikeStringConstraint String lastName, @NotNull String address, @Past Date birthdate){
     String username = userUtils.createUsername(firstName, lastName);
     String password = UserUtils.getSaltString();
     
@@ -98,7 +98,7 @@ public class TraineeService {
     trainee.setBirthdate(birthdate);
 
     traineeRepository.save(trainee);
-    return mapper.toDTO(trainee);
+    return new AuthenticationDTO(username, password);
   }
 
   @CheckCredentials

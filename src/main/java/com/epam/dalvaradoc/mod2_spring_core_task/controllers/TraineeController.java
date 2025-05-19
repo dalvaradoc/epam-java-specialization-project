@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
@@ -41,9 +40,7 @@ public class TraineeController {
 
     @PostMapping
     public ResponseEntity<AuthenticationDTO> registerTrainee(@Valid @RequestBody TraineeDTO dto) {
-        TraineeDTO trainee = traineeService.createTrainee(
-                dto.getFirstName(), dto.getLastName(), dto.getAddress(), dto.getBirthdate());
-        return ResponseEntity.ok(trainee.getAuth());
+        return ResponseEntity.ok(traineeService.createTrainee( dto.getFirstName(), dto.getLastName(), dto.getAddress(), dto.getBirthdate()));
     }
     
     @GetMapping("/{username}")
