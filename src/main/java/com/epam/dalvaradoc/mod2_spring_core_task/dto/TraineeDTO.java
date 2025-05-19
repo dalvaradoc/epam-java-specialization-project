@@ -22,7 +22,7 @@ public class TraineeDTO {
   private String firstName;
   @NameLikeStringConstraint
   private String lastName;
-  private boolean isActive;
+  private Boolean isActive;
   @Past
   private Date birthdate;
   @NonNull

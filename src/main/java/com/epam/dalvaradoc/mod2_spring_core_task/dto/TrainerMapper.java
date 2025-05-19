@@ -16,7 +16,7 @@ public class TrainerMapper implements UserMapper<Trainer, TrainerDTO> {
     trainer.setLastName(dto.getLastName());
     trainer.setUsername(dto.getAuth().getUsername());
     trainer.setPassword(dto.getAuth().getPassword());
-    trainer.setActive(dto.isActive());
+    trainer.setActive(dto.getIsActive());
     trainer.setSpecialization(trainingTypeMapper.toObject(dto.getSpecialization()));
 
     return trainer;

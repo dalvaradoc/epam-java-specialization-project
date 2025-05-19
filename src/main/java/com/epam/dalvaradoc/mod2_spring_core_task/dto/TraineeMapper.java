@@ -8,7 +8,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.Mapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserMapper;
 
-public class TraineeMapper implements UserMapper<Trainee, TraineeDTO> {
+public class TraineeMapper implements Mapper<Trainee, TraineeDTO> {
   private final TrainingTypeMapper trainingTypeMapper = new TrainingTypeMapper();
   private final TrainerMapper trainerMapper = new TrainerMapper();
 
@@ -18,7 +18,7 @@ public class TraineeMapper implements UserMapper<Trainee, TraineeDTO> {
 
     trainee.setFirstName(dto.getFirstName());
     trainee.setLastName(dto.getLastName());
-    trainee.setActive(dto.isActive());
+    trainee.setActive(dto.getIsActive());
     trainee.setBirthdate(dto.getBirthdate());
     trainee.setAddress(dto.getAddress());
     trainee.setUsername(dto.getAuth().getUsername());
@@ -34,13 +34,11 @@ public class TraineeMapper implements UserMapper<Trainee, TraineeDTO> {
   @Override
   public TraineeDTO toDTO(Trainee object) {
     return TraineeDTO.builder()
-        .userId(object.getUserId())
         .firstName(object.getFirstName())
         .lastName(object.getLastName())
         .isActive(object.isActive())
         .birthdate(object.getBirthdate())
         .address(object.getAddress())
-        .auth(new AuthenticationDTO(object.getUsername(), object.getPassword()))
         .trainers(object.getTrainings()
             .stream()
             .map(Training::getTrainer)
@@ -56,27 +54,27 @@ public class TraineeMapper implements UserMapper<Trainee, TraineeDTO> {
         .build();
   }
 
-  @Override
-  public TraineeDTO toDTOwithoutPassword(Trainee object) {
-    return TraineeDTO.builder()
-        .userId(object.getUserId())
-        .firstName(object.getFirstName())
-        .lastName(object.getLastName())
-        .isActive(object.isActive())
-        .birthdate(object.getBirthdate())
-        .address(object.getAddress())
-        .auth(new AuthenticationDTO(object.getUsername(), null))
-        .trainers(object.getTrainers()
-            .stream()
-            .map(trainer -> TrainerDTO.builder()
-                .auth(AuthenticationDTO.builder()
-                    .username(trainer.getUsername())
-                    .build())
-                .firstName(trainer.getFirstName())
-                .lastName(trainer.getLastName())
-                .specialization(trainingTypeMapper.toDTO(trainer.getSpecialization()))
-                .build())
-            .toList())
-        .build();
-  }
+//   @Override
+//   public TraineeDTO toDTOwithoutPassword(Trainee object) {
+//     return TraineeDTO.builder()
+//         .userId(object.getUserId())
+//         .firstName(object.getFirstName())
+//         .lastName(object.getLastName())
+//         .isActive(object.isActive())
+//         .birthdate(object.getBirthdate())
+//         .address(object.getAddress())
+//         .auth(new AuthenticationDTO(object.getUsername(), null))
+//         .trainers(object.getTrainers()
+//             .stream()
+//             .map(trainer -> TrainerDTO.builder()
+//                 .auth(AuthenticationDTO.builder()
+//                     .username(trainer.getUsername())
+//                     .build())
+//                 .firstName(trainer.getFirstName())
+//                 .lastName(trainer.getLastName())
+//                 .specialization(trainingTypeMapper.toDTO(trainer.getSpecialization()))
+//                 .build())
+//             .toList())
+//         .build();
+//   }
 }

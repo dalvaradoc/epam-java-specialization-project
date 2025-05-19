@@ -6,11 +6,9 @@ import lombok.Data;
 @Data
 @Builder
 public class TrainingTypeDTO {
-  private Long trainingTypeId;
   private String name;
 
-  public TrainingTypeDTO(Long trainingTypeId, String name) {
-    this.trainingTypeId = trainingTypeId;
+  public TrainingTypeDTO(String name) {
     this.name = name;
   }
 }

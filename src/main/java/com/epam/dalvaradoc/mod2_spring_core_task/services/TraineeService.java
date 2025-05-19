@@ -115,7 +115,7 @@ public class TraineeService {
     }
     traineeRepository.save(trainee);
     LOGGER.info("Trainee updated: " + trainee.toString());
-    return mapper.toDTOwithoutPassword(trainee);
+    return mapper.toDTO(trainee);
   }
 
   @CheckCredentials

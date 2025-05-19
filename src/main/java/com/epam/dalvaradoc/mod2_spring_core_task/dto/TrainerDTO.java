@@ -19,7 +19,7 @@ public class TrainerDTO {
   private String firstName;
   @NameLikeStringConstraint
   private String lastName;
-  private boolean isActive;
+  private Boolean isActive;
   @NonNull
   private TrainingTypeDTO specialization;
 

@@ -9,9 +9,10 @@ import org.springframework.validation.annotation.Validated;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.aop.CheckCredentials;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
-import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserUtils;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.NameLikeStringConstraint;
@@ -26,8 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class TrainerService {
   private TrainerRepository trainerRepository; 
+
   private UserUtils userUtils;
   private final TrainerMapper mapper = new TrainerMapper();
+  private final TrainingTypeMapper trainingTypeMapper = new TrainingTypeMapper();
 
   @Autowired
   public TrainerService(TrainerRepository trainerRepository, UserUtils userUtils) {
@@ -59,7 +62,7 @@ public class TrainerService {
         .orElse(null);
   }
 
-  public TrainerDTO createTrainer(@NameLikeStringConstraint String firstName, @NameLikeStringConstraint String lastName, @NotNull TrainingType specialization){
+  public TrainerDTO createTrainer(@NameLikeStringConstraint String firstName, @NameLikeStringConstraint String lastName, @NotNull TrainingTypeDTO specialization){
     String username = userUtils.createUsername(firstName, lastName);
     String password = UserUtils.getSaltString();
     
@@ -69,7 +72,7 @@ public class TrainerService {
     trainer.setUsername(username);
     trainer.setPassword(password);
     trainer.setActive(true);
-    trainer.setSpecialization(specialization);
+    trainer.setSpecialization(trainingTypeMapper.toObject(specialization));
 
     trainerRepository.save(trainer);
     LOGGER.info("Trainer created: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
