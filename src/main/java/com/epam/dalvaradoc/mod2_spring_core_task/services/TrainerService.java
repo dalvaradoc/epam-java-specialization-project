@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.aop.CheckCredentials;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
@@ -55,8 +56,8 @@ public class TrainerService {
   }
 
   @CheckCredentials
-  public TrainerDTO getTrainerByUsername(@UsernameConstraint String username, @NotNull String password) {
-    return Optional.ofNullable(username)
+  public TrainerDTO getTrainerByUsername(@Valid AuthenticationDTO auth) {
+    return Optional.ofNullable(auth.getUsername())
         .map(trainerRepository::findByUsername)
         .map(mapper::toDTO)
         .orElse(null);

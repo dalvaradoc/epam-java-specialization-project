@@ -26,9 +26,9 @@ public class TrainerController {
         return ResponseEntity.ok(trainerService.getAllTrainers());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TrainerDTO> getTrainerById(@PathVariable String id) {
-        return ResponseEntity.ok(trainerService.getTrainerById(id, null, null));
+    @GetMapping("/{username}")
+    public ResponseEntity<TrainerDTO> getTrainerByUsername(@Valid @RequestBody AuthenticationDTO auth) {
+        return ResponseEntity.ok(trainerService.getTrainerByUsername(auth));
     }
 
     @PostMapping

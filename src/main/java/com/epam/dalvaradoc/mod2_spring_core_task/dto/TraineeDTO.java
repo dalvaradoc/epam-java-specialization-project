@@ -19,6 +19,8 @@ import lombok.Data;
 public class TraineeDTO {
   //It should be validated with UUID, but for simplicity of test it can receive any id
   private String userId;
+  @Valid
+  AuthenticationDTO auth;
   @NameLikeStringConstraint
   private String firstName;
   @NameLikeStringConstraint
@@ -28,9 +30,5 @@ public class TraineeDTO {
   private Date birthdate;
   @NonNull
   private String address;
-  
   private List<TrainerDTO> trainers;
-  //This is optional when returning authentication information
-  @Valid
-  AuthenticationDTO auth;
 }

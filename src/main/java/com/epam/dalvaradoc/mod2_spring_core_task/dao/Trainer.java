@@ -24,7 +24,7 @@ public class Trainer extends User {
   private TrainingType specialization;
 
   @OneToMany(mappedBy = "trainer")
-  private List<Training> training = new ArrayList<>();
+  private List<Training> trainings = new ArrayList<>();
 
   @ManyToMany(mappedBy = "trainers")
   private Set<Trainee> trainees = new HashSet<>();

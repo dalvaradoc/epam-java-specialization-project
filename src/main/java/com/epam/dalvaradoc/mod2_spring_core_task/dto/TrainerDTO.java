@@ -1,5 +1,7 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dto;
 
+import java.util.List;
+
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.NameLikeStringConstraint;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
@@ -14,8 +16,8 @@ import lombok.Data;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TrainerDTO {
-  //It should be validated with UUID, but for simplicity of test it can receive any id
-  private String userId;
+  @Valid
+  AuthenticationDTO auth;
   @NameLikeStringConstraint
   private String firstName;
   @NameLikeStringConstraint
@@ -23,6 +25,5 @@ public class TrainerDTO {
   private Boolean isActive;
   @NonNull
   private TrainingTypeDTO specialization;
-  @Valid
-  AuthenticationDTO auth;
+  private List<TraineeDTO> trainees;
 }
