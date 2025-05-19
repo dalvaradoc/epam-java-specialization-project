@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
@@ -44,7 +45,7 @@ class TraineesTests {
 	@Test
 	void createTraineeTest() {
 		TraineeDTO trainee = traineeService.createTrainee("John", "Smith", "CL 1 # 1-2", Date.valueOf("2000-02-02"));
-		assertNotNull(traineeService.getTraineeById(trainee.getUserId(), trainee.getUsername(), trainee.getPassword()));
+		assertNotNull(traineeService.getTraineeById(trainee.getUserId(), trainee.getAuth().getUsername(), trainee.getAuth().getPassword()));
 		assertEquals(traineeMapper.toDTO(traineeRepository.findById(trainee.getUserId()).get()), trainee);
 
 		traineeRepository.deleteById(trainee.getUserId());
@@ -103,9 +104,10 @@ class TraineesTests {
 
 	@Test
 	void deleteTraineeTest() {
-		Trainee trainee = traineeMapper.toObject(traineeService.createTrainee("xxx", "xxx", "CL X # X - X", Date.valueOf("2000-02-02")));
+		TraineeDTO trainee = traineeService.createTrainee("xxx", "xxx", "CL X # X - X", Date.valueOf("2000-02-02"));
 		assertNotNull(trainee);
-		traineeService.deleteTraineeById(trainee.getUserId(), trainee.getUsername(), trainee.getPassword());
+		// assertEquals("lol", trainee.toString());
+		traineeService.deleteTraineeById(trainee.getUserId(), trainee.getAuth().getUsername(), trainee.getAuth().getPassword());
 		assertFalse(traineeRepository.findById(trainee.getUserId()).isPresent());
 	}
 

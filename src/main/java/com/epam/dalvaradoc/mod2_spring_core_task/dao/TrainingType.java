@@ -10,8 +10,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity(name = "training_types")
 public class TrainingType {
   @Id

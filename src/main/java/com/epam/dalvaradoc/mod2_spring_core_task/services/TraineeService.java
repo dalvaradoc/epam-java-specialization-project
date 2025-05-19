@@ -1,7 +1,11 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.services;
 
 import java.sql.Date;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,9 +13,15 @@ import org.springframework.validation.annotation.Validated;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.aop.CheckCredentials;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
+import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserUtils;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.NameLikeStringConstraint;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
@@ -26,13 +36,25 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class TraineeService {
   private TraineeRepository traineeRepository;
+  private TrainingRepository trainingRepository;
+
   private UserUtils userUtils;
   private final TraineeMapper mapper = new TraineeMapper();
+  private final TrainerMapper trainerMapper = new TrainerMapper();
+  
 
   @Autowired
-  public TraineeService(TraineeRepository traineeRepository, UserUtils userUtils) {
+  public TraineeService(TraineeRepository traineeRepository, TrainingRepository trainingRepository, UserUtils userUtils) {
     this.traineeRepository = traineeRepository;
+    this.trainingRepository = trainingRepository;
     this.userUtils = userUtils;
+  }
+
+  public List<TraineeDTO> getAllTrainees() {
+    return traineeRepository.findAll()
+        .stream()
+        .map(mapper::toDTO)
+        .toList();
   }
 
   @CheckCredentials
@@ -47,6 +69,14 @@ public class TraineeService {
   @CheckCredentials
   public TraineeDTO getTraineeByUsername(@UsernameConstraint String username, @NotNull String password) {
     return Optional.ofNullable(username)
+        .map(traineeRepository::findByUsername)
+        .map(mapper::toDTO)
+        .orElse(null);
+  }
+
+  @CheckCredentials
+  public TraineeDTO getTraineeByUsername(@Valid AuthenticationDTO auth) {
+    return Optional.ofNullable(auth.getUsername())
         .map(traineeRepository::findByUsername)
         .map(mapper::toDTO)
         .orElse(null);
@@ -70,11 +100,11 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public boolean updateTrainee(@Valid @NotNull Trainee trainee){
+  public TraineeDTO updateTrainee(@Valid @NotNull Trainee trainee){
     Optional<Trainee> traineeOptional = traineeRepository.findById(trainee.getUserId());
 
     if(traineeOptional.isEmpty()){
-      return false;
+      return null;
     }
 
     Trainee oldTrainee = traineeOptional.get();
@@ -85,7 +115,7 @@ public class TraineeService {
     }
     traineeRepository.save(trainee);
     LOGGER.info("Trainee updated: " + trainee.toString());
-    return true;
+    return mapper.toDTOwithoutPassword(trainee);
   }
 
   @CheckCredentials

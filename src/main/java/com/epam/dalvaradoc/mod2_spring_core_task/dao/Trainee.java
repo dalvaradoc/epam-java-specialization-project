@@ -26,10 +26,10 @@ public class Trainee extends User {
   private String address;
 
   @OneToMany(mappedBy = "trainee", cascade = jakarta.persistence.CascadeType.ALL)
-  private List<Training> training = new ArrayList<>();
+  private List<Training> trainings = new ArrayList<>();
 
   @ManyToMany
-  @JoinTable(name = "trainee_trainer",
+  @JoinTable(name = "trainee_trainers",
       joinColumns = @JoinColumn(name = "trainee_id"),
       inverseJoinColumns = @JoinColumn(name = "trainer_id"))
   private Set<Trainer> trainers = new HashSet<>();

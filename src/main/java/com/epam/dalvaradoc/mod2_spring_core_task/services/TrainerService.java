@@ -1,5 +1,6 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,13 @@ public class TrainerService {
   public TrainerService(TrainerRepository trainerRepository, UserUtils userUtils) {
     this.trainerRepository = trainerRepository;
     this.userUtils = userUtils;
+  }
+
+  public List<TrainerDTO> getAllTrainers() {
+    return trainerRepository.findAll()
+        .stream()
+        .map(mapper::toDTO)
+        .toList();
   }
 
   @CheckCredentials

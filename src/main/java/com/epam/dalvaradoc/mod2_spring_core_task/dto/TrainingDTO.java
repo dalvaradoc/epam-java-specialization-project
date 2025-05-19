@@ -7,15 +7,19 @@ import org.hibernate.validator.constraints.Length;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TrainingDTO {
   //It should be validated with UUID, but for simplicity of test it can receive any id
   private String trainingId;

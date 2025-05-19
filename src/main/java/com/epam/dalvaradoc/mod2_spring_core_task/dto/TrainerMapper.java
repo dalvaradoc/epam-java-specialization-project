@@ -1,9 +1,11 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dto;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
-import com.epam.dalvaradoc.mod2_spring_core_task.utils.Mapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
+import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserMapper;
 
-public class TrainerMapper implements Mapper<Trainer, TrainerDTO> {
+public class TrainerMapper implements UserMapper<Trainer, TrainerDTO> {
+  private final TrainingTypeMapper trainingTypeMapper = new TrainingTypeMapper();
 
   @Override
   public Trainer toObject(TrainerDTO dto) {
@@ -12,10 +14,10 @@ public class TrainerMapper implements Mapper<Trainer, TrainerDTO> {
     trainer.setUserId(dto.getUserId());
     trainer.setFirstName(dto.getFirstName());
     trainer.setLastName(dto.getLastName());
-    trainer.setUsername(dto.getUsername());
-    trainer.setPassword(dto.getPassword());
+    trainer.setUsername(dto.getAuth().getUsername());
+    trainer.setPassword(dto.getAuth().getPassword());
     trainer.setActive(dto.isActive());
-    trainer.setSpecialization(dto.getSpecialization());
+    trainer.setSpecialization(trainingTypeMapper.toObject(dto.getSpecialization()));
 
     return trainer;
   }
@@ -26,10 +28,20 @@ public class TrainerMapper implements Mapper<Trainer, TrainerDTO> {
         .userId(object.getUserId())
         .firstName(object.getFirstName())
         .lastName(object.getLastName())
-        .username(object.getUsername())
-        .password(object.getPassword())
         .isActive(object.isActive())
-        .specialization(object.getSpecialization())
+        .specialization(trainingTypeMapper.toDTO(object.getSpecialization()))
+        .auth(new AuthenticationDTO(object.getUsername(), object.getPassword()))
+        .build();
+  }
+
+  @Override
+  public TrainerDTO toDTOwithoutPassword(Trainer object) {
+    return TrainerDTO.builder()
+        .userId(object.getUserId())
+        .firstName(object.getFirstName())
+        .lastName(object.getLastName())
+        .isActive(object.isActive())
+        .specialization(trainingTypeMapper.toDTO(object.getSpecialization()))
         .build();
   }
 }
