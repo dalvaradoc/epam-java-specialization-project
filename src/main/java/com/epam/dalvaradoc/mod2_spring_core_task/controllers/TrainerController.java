@@ -2,6 +2,7 @@ package com.epam.dalvaradoc.mod2_spring_core_task.controllers;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TrainerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,13 @@ public class TrainerController {
     @PostMapping
     public ResponseEntity<AuthenticationDTO> registerTrainer(@Valid @RequestBody TrainerDTO dto) {
         return ResponseEntity.ok(trainerService.createTrainer(
-                dto.getFirstName(), dto.getLastName(), dto.getSpecialization()).getAuth());
+                dto.getFirstName(), dto.getLastName(), dto.getSpecialization().getName()));
     }
 
-    // @PutMapping
-    // public ResponseEntity<Boolean> updateTrainer(@Valid @RequestBody TrainerDTO dto) {
-    //     return ResponseEntity.ok(trainerService.updateTrainer(dto));
-    // }
+    @PutMapping
+    public ResponseEntity<TrainerDTO> updateTrainer(@Valid @RequestBody UpdateTrainerDTO dto) {
+        return ResponseEntity.ok(trainerService.updateTrainer(dto, dto.getAuth()));
+    }
 
     // @DeleteMapping("/{id}")
     // public ResponseEntity<Void> deleteTrainer(@PathVariable String id) {

@@ -14,7 +14,9 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingTypeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserUtils;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.NameLikeStringConstraint;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
@@ -28,14 +30,16 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class TrainerService {
   private TrainerRepository trainerRepository; 
+  private TrainingTypeRepository trainingTypeRepository;
 
   private UserUtils userUtils;
   private final TrainerMapper mapper = new TrainerMapper();
   private final TrainingTypeMapper trainingTypeMapper = new TrainingTypeMapper();
 
   @Autowired
-  public TrainerService(TrainerRepository trainerRepository, UserUtils userUtils) {
+  public TrainerService(TrainerRepository trainerRepository, TrainingTypeRepository trainingTypeRepository, UserUtils userUtils) {
     this.trainerRepository = trainerRepository;
+    this.trainingTypeRepository = trainingTypeRepository;
     this.userUtils = userUtils;
   }
 
@@ -63,7 +67,7 @@ public class TrainerService {
         .orElse(null);
   }
 
-  public TrainerDTO createTrainer(@NameLikeStringConstraint String firstName, @NameLikeStringConstraint String lastName, @NotNull TrainingTypeDTO specialization){
+  public AuthenticationDTO createTrainer(@NameLikeStringConstraint String firstName, @NameLikeStringConstraint String lastName, @NotNull String specialization){
     String username = userUtils.createUsername(firstName, lastName);
     String password = UserUtils.getSaltString();
     
@@ -73,30 +77,30 @@ public class TrainerService {
     trainer.setUsername(username);
     trainer.setPassword(password);
     trainer.setActive(true);
-    trainer.setSpecialization(trainingTypeMapper.toObject(specialization));
+    trainer.setSpecialization(trainingTypeRepository.findByName(specialization));
 
     trainerRepository.save(trainer);
     LOGGER.info("Trainer created: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
-    return mapper.toDTO(trainer);
+    return new AuthenticationDTO(username, password);
   }
 
   @CheckCredentials
-  public boolean updateTrainer(@Valid @NotNull Trainer trainer){
-    Optional<Trainer> trainerOptional = trainerRepository.findById(trainer.getUserId());
+  public TrainerDTO updateTrainer(@Valid UpdateTrainerDTO dto, @Valid AuthenticationDTO auth){
+    Optional<Trainer> trainerOptional = Optional.ofNullable(trainerRepository.findByUsername(dto.getAuth().getUsername()));
     if (trainerOptional.isEmpty()){
-      return false;
+      return null;
     }
 
-    Trainer oldTrainer = trainerOptional.get();
-    if (!oldTrainer.getFirstName().equals(trainer.getFirstName()) || !oldTrainer.getLastName().equals(trainer.getLastName())){
-      String newUsername = userUtils.createUsername(trainer.getFirstName(), trainer.getLastName());
-      trainer.setUsername(newUsername);
-      LOGGER.info("Username changed");
-    }
+    Trainer trainer = trainerOptional.get();
+
+    trainer.setFirstName(dto.getFirstName());
+    trainer.setLastName(dto.getLastName());
+    trainer.setSpecialization(trainingTypeRepository.findByName(dto.getSpecialization()));
+    trainer.setActive(dto.getIsActive());
 
     trainerRepository.save(trainer);
     LOGGER.info("Trainer updated: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
-    return true;
+    return mapper.toDTO(trainer);
   }
 
   @CheckCredentials
