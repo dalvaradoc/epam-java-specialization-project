@@ -121,7 +121,11 @@ public class TraineeService {
 
     traineeRepository.save(trainee);
     LOGGER.info("Trainee updated: " + trainee.toString());
-    return mapper.toDTO(trainee);
+    TraineeDTO traineeDTO = mapper.toDTO(trainee);
+    traineeDTO.setAuth(AuthenticationDTO.builder()
+        .username(trainee.getUsername())
+        .build());
+    return traineeDTO;
   }
 
   @CheckCredentials
