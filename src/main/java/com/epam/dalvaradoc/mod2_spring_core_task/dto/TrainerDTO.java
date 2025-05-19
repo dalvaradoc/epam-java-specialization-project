@@ -6,6 +6,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import io.micrometer.common.lang.NonNull;
+import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.Data;
 
@@ -22,6 +23,6 @@ public class TrainerDTO {
   private Boolean isActive;
   @NonNull
   private TrainingTypeDTO specialization;
-
+  @Valid
   AuthenticationDTO auth;
 }

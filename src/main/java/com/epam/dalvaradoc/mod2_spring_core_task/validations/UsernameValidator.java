@@ -7,6 +7,6 @@ public class UsernameValidator implements ConstraintValidator<UsernameConstraint
 
   @Override
   public boolean isValid(String username, ConstraintValidatorContext context) {
-    return username != null && username.matches("^[a-zA-Z0-9 ,']+\\.[a-zA-Z0-9 ,']+(#[1-9]+)?$");
+    return username != null && !username.isEmpty() && username.matches("^[a-zA-Z0-9 ,']+\\.[a-zA-Z0-9 ,']+(#[1-9]+)?$");
   }
 }

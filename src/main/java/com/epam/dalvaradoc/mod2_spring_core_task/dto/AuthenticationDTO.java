@@ -14,8 +14,6 @@ import lombok.Data;
 public class AuthenticationDTO {
   @UsernameConstraint
   private String username;
-  @NotNull
-  @NotEmpty
   private String password;
 
   public AuthenticationDTO(String username, String password) {

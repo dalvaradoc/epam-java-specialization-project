@@ -20,6 +20,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserUtils;
@@ -100,19 +101,23 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public TraineeDTO updateTrainee(@Valid @NotNull Trainee trainee){
-    Optional<Trainee> traineeOptional = traineeRepository.findById(trainee.getUserId());
+  public TraineeDTO updateTrainee(@Valid UpdateTraineeDTO newTrainee, @Valid AuthenticationDTO auth) {
+    Optional<Trainee> traineeOptional = Optional.ofNullable(traineeRepository.findByUsername(newTrainee.getAuth().getUsername()));
 
     if(traineeOptional.isEmpty()){
       return null;
     }
 
-    Trainee oldTrainee = traineeOptional.get();
-    if (!oldTrainee.getFirstName().equals(trainee.getFirstName()) || !oldTrainee.getLastName().equals(trainee.getLastName())){
-      String newUsername = userUtils.createUsername(trainee.getFirstName(), trainee.getLastName());
-      trainee.setUsername(newUsername);
-      LOGGER.info("Username changed");
+    Trainee trainee = traineeOptional.get();
+    trainee.setFirstName(newTrainee.getFirstName());
+    trainee.setLastName(newTrainee.getLastName());
+    if (newTrainee.getBirthdate() != null) {
+      trainee.setBirthdate(newTrainee.getBirthdate());
     }
+    if (newTrainee.getAddress() != null) {
+      trainee.setAddress(newTrainee.getAddress());
+    }
+
     traineeRepository.save(trainee);
     LOGGER.info("Trainee updated: " + trainee.toString());
     return mapper.toDTO(trainee);

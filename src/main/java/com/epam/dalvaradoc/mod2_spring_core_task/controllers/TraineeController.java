@@ -17,6 +17,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TraineeService;
 
 import jakarta.validation.Valid;
@@ -51,8 +52,8 @@ public class TraineeController {
     }
 
     @PutMapping
-    public ResponseEntity<TraineeDTO> updateTrainee(@RequestBody TraineeDTO dto) {
-        return ResponseEntity.ok(traineeService.updateTrainee(mapper.toObject(dto)));
+    public ResponseEntity<TraineeDTO> updateTrainee(@Valid @RequestBody UpdateTraineeDTO dto) {
+        return ResponseEntity.ok(traineeService.updateTrainee(dto, dto.getAuth()));
     }
 
     @DeleteMapping("/{id}")
