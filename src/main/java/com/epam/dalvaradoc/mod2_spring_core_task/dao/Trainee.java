@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -25,7 +26,7 @@ public class Trainee extends User {
 
   private String address;
 
-  @OneToMany(mappedBy = "trainee", cascade = jakarta.persistence.CascadeType.ALL)
+  @OneToMany(mappedBy = "trainee", cascade = jakarta.persistence.CascadeType.ALL, fetch = FetchType.EAGER)
   private List<Training> trainings = new ArrayList<>();
 
   @ManyToMany

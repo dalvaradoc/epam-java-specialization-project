@@ -69,23 +69,6 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public TraineeDTO getTraineeById(@NotNull String id, @UsernameConstraint String username, @NotNull String password) {
-    return Optional.ofNullable(id)
-        .map(traineeRepository::findById)
-        .flatMap(opt -> opt)
-        .map(mapper::toDTO)
-        .orElse(null);
-  }
-
-  @CheckCredentials
-  public TraineeDTO getTraineeByUsername(@UsernameConstraint String username, @NotNull String password) {
-    return Optional.ofNullable(username)
-        .map(traineeRepository::findByUsername)
-        .map(mapper::toDTO)
-        .orElse(null);
-  }
-
-  @CheckCredentials
   public TraineeDTO getTraineeByUsername(@Valid AuthenticationDTO auth) {
     return Optional.ofNullable(auth.getUsername())
         .map(traineeRepository::findByUsername)
