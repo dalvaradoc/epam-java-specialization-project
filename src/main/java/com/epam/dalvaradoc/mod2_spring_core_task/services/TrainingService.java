@@ -96,14 +96,18 @@ public class TrainingService {
     Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
     Trainer trainer = trainerRepository.findByUsername(auth.getUsername());
 
+    if (dto.getName() == null && dto.getName().isEmpty()) {
+      throw new IllegalArgumentException("Training name cannot be null or empty");
+    }
+
     if (trainee == null && trainer == null) {
       throw new IllegalArgumentException("User not found");
     }
 
-    if (trainee != null && dto.getTrainee().getAuth() != null && !dto.getAuth().getUsername().equals(dto.getTrainee().getAuth().getUsername())) {
+    if (trainee != null && dto.getTrainee().getAuth() != null && !auth.getUsername().equals(dto.getTrainee().getAuth().getUsername())) {
       throw new BadCredentialsException("Trainee username does not match");
     }
-    if (trainer != null && dto.getTrainer().getAuth() != null && !dto.getAuth().getUsername().equals(dto.getTrainer().getAuth().getUsername())) {
+    if (trainer != null && dto.getTrainer().getAuth() != null && !auth.getUsername().equals(dto.getTrainer().getAuth().getUsername())) {
       throw new BadCredentialsException("Trainee username does not match");
     }
 
@@ -121,7 +125,8 @@ public class TrainingService {
     training.setType(trainingTypeRepository.findByName(dto.getType().getName()));
     training.setDate(dto.getDate());
     training.setDuration(dto.getDuration());
-
+    
+    trainingRepository.save(training);
     return mapper.toDTO(training);
   }
 

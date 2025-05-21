@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -23,7 +24,7 @@ public class Trainer extends User {
   @JoinColumn(name = "SPECIALIZATION")
   private TrainingType specialization;
 
-  @OneToMany(mappedBy = "trainer")
+  @OneToMany(mappedBy = "trainer", fetch = FetchType.EAGER)
   private List<Training> trainings = new ArrayList<>();
 
   @ManyToMany(mappedBy = "trainers")

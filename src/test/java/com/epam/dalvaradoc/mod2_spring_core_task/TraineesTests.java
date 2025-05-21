@@ -3,7 +3,6 @@ package com.epam.dalvaradoc.mod2_spring_core_task;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Date;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

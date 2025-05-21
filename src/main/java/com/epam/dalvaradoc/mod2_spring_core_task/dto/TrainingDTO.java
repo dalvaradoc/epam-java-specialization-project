@@ -17,7 +17,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TrainingDTO {
@@ -26,6 +26,7 @@ public class TrainingDTO {
   private TraineeDTO trainee;
   @NotNull
   private TrainerDTO trainer;
+  @NotNull
   @Length(min = 2, max = 50, message = "Training name must be between 2 and 50 characters")
   private String name;
   @NotNull

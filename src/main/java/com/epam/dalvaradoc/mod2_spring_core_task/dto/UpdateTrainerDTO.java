@@ -6,9 +6,13 @@ import io.micrometer.common.lang.NonNull;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
 @Getter
+@Data
+@Builder
 public class UpdateTrainerDTO {
   @Valid
   AuthenticationDTO auth;
