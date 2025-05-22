@@ -18,22 +18,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeTrainersListDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TraineeService;
 import com.epam.dalvaradoc.mod2_spring_core_task.services.TrainingService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/trainees")
+@Tag(name = "Trainee Management", description = "Endpoints for managing trainees")
 public class TraineeController {
 
     private final TraineeService traineeService;
@@ -52,6 +53,14 @@ public class TraineeController {
         return ResponseEntity.ok(traineeService.getAllTrainees());
     }
 
+    // @Operation(summary = "Get all trainees", description = "Retrieves a list of
+    // all registered trainees")
+    // @ApiResponses(value = {
+    // @ApiResponse(responseCode = "200", description = "Successfully retrieved
+    // trainees list"),
+    // @ApiResponse(responseCode = "401", description = "Unauthorized"),
+    // @ApiResponse(responseCode = "403", description = "Forbidden")
+    // })
     @PostMapping
     public ResponseEntity<AuthenticationDTO> registerTrainee(@Valid @RequestBody TraineeDTO dto) {
         return ResponseEntity.ok(traineeService.createTrainee(dto.getFirstName(), dto.getLastName(), dto.getAddress(),
@@ -99,8 +108,10 @@ public class TraineeController {
         return ResponseEntity.ok(traineeService.getTrainings(filters, auth));
     }
 
-    @PatchMapping("/{username}/set-active-state") 
-    public void changeActiveState(@RequestParam boolean active, @Valid @RequestBody AuthenticationDTO auth) {
-        ResponseEntity.ok(traineeService.changeActiveState(active, auth));
+    @PatchMapping("/{username}/set-active-state")
+    public ResponseEntity<Void> changeActiveState(@RequestParam boolean active,
+            @Valid @RequestBody AuthenticationDTO auth) {
+        traineeService.changeActiveState(active, auth);
+        return ResponseEntity.ok().build();
     }
 }

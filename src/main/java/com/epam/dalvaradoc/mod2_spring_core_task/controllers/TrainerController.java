@@ -61,8 +61,10 @@ public class TrainerController {
         return ResponseEntity.ok(trainerService.getTrainings(filters, auth));
     }
 
-    @PatchMapping("/{username}/set-active-state") 
-    public void changeActiveState(@RequestParam boolean active, @Valid @RequestBody AuthenticationDTO auth) {
-        ResponseEntity.ok(trainerService.changeActiveState(active, auth));
+    @PatchMapping("/{username}/set-active-state")
+    public ResponseEntity<Void> changeActiveState(@RequestParam boolean active,
+            @Valid @RequestBody AuthenticationDTO auth) {
+        trainerService.changeActiveState(active, auth);
+        return ResponseEntity.ok().build();
     }
 }
