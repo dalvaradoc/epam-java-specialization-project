@@ -47,9 +47,7 @@ public class TraineeController {
     }
 
     @Operation(summary = "Get all trainees", description = "This endpoint is for tests only. Retrieves a list of all registered trainees")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrievedtrainees list"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrievedtrainees list")
     })
     @GetMapping
     public ResponseEntity<List<TraineeDTO>> getAllTrainees() {
