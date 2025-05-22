@@ -7,7 +7,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 public class CustomLoggerFormatting implements StructuredLogFormatter<ILoggingEvent> {
   @Override
   public String format(ILoggingEvent event) {
-		return "%clr(TIME=" + event.getInstant() + "){yellow} LEVEL=" + event.getLevel() + " MESSAGE=" + event.getMessage() + "\n";
+		return "%clr(TIME=" + event.getInstant() + ") LEVEL=" + event.getLevel() + " MESSAGE=" + event.getMessage() + "\n";
   }
 
 }

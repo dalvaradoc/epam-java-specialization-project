@@ -3,6 +3,7 @@ package com.epam.dalvaradoc.mod2_spring_core_task.controllers;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,14 +28,14 @@ public class GeneralController {
 
   @CheckCredentials
   @GetMapping("/login")
-  public String login(@Valid @RequestBody AuthenticationDTO auth) {
-    return "Login successful for user: " + auth.getUsername();
+  public ResponseEntity<String> login(@Valid @RequestBody AuthenticationDTO auth) {
+    return ResponseEntity.ok("Login successful for user: " + auth.getUsername());
   }
 
   @PutMapping("/change-password")
-  public AuthenticationDTO changePassword(@RequestBody Map<String, String> requestBody) {
+  public ResponseEntity<AuthenticationDTO> changePassword(@RequestBody Map<String, String> requestBody) {
     LOGGER.info("Password changed successfully for user: " + requestBody.get("username"));
     AuthenticationDTO auth = new AuthenticationDTO(requestBody.get("username"), requestBody.get("password"));
-    return userService.changePassword(requestBody.get("newPassword"), auth);
+    return ResponseEntity.ok(userService.changePassword(requestBody.get("newPassword"), auth));
   }
 }

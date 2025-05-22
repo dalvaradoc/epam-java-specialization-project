@@ -7,9 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -50,8 +52,7 @@ public class TraineeService {
   private UserUtils userUtils;
   private final TraineeMapper mapper = new TraineeMapper();
   private final TrainerMapper trainerMapper = new TrainerMapper();
-  private final TrainingMapper trainingMapper = new TrainingMapper();
-  
+  private final TrainingMapper trainingMapper = new TrainingMapper();  
 
   @Autowired
   public TraineeService(TraineeRepository traineeRepository, TrainingRepository trainingRepository, TrainerRepository trainerRepository, UserUtils userUtils) {
