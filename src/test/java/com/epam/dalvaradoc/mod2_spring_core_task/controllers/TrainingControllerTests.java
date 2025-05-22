@@ -37,16 +37,16 @@ class TrainingControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Autowired
     private ObjectMapper objectMapper;
-    
+
     @Autowired
     private TrainingRepository trainingRepository;
-    
+
     @Autowired
     private TrainerRepository trainerRepository;
-    
+
     @Autowired
     private TraineeRepository traineeRepository;
 
@@ -68,19 +68,19 @@ class TrainingControllerTests {
     void getAllTrainingTypesTest() throws Exception {
         Trainer trainer = trainerRepository.findById("26").orElse(null);
         assertNotNull(trainer);
-        
+
         AuthenticationDTO auth = new AuthenticationDTO(trainer.getUsername(), trainer.getPassword());
 
         MvcResult result = mockMvc.perform(get("/trainings/types")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(auth)))
-            .andExpect(status().isOk())
-            .andReturn();
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(auth)))
+                .andExpect(status().isOk())
+                .andReturn();
 
         List<TrainingTypeDTO> types = objectMapper.readValue(
-            result.getResponse().getContentAsString(),
-            new TypeReference<List<TrainingTypeDTO>>() {}
-        );
+                result.getResponse().getContentAsString(),
+                new TypeReference<List<TrainingTypeDTO>>() {
+                });
 
         assertNotNull(types);
         assertFalse(types.isEmpty());
@@ -94,33 +94,32 @@ class TrainingControllerTests {
         Trainer trainer = existingTraining.getTrainer();
 
         TrainingDTO trainingDTO = TrainingDTO.builder()
-            .name("Test Training")
-            .type(TrainingTypeDTO.builder().name("CARDIO").build())
-            .date(Date.valueOf("2025-04-21"))
-            .duration(10)
-            .trainee(TraineeDTO.builder()
-                .firstName(trainee.getFirstName())
-                .lastName(trainee.getLastName())
+                .name("Test Training")
+                .type(TrainingTypeDTO.builder().name("CARDIO").build())
+                .date(Date.valueOf("2026-04-21"))
+                .duration(10)
+                .trainee(TraineeDTO.builder()
+                        .firstName(trainee.getFirstName())
+                        .lastName(trainee.getLastName())
+                        .auth(new AuthenticationDTO(trainee.getUsername(), trainee.getPassword()))
+                        .build())
+                .trainer(TrainerDTO.builder()
+                        .firstName(trainer.getFirstName())
+                        .lastName(trainer.getLastName())
+                        .auth(new AuthenticationDTO(trainer.getUsername(), trainer.getPassword()))
+                        .build())
                 .auth(new AuthenticationDTO(trainee.getUsername(), trainee.getPassword()))
-                .build())
-            .trainer(TrainerDTO.builder()
-                .firstName(trainer.getFirstName())
-                .lastName(trainer.getLastName())
-                .auth(new AuthenticationDTO(trainer.getUsername(), trainer.getPassword()))
-                .build())
-            .auth(new AuthenticationDTO(trainee.getUsername(), trainee.getPassword()))
-            .build();
+                .build();
 
         MvcResult result = mockMvc.perform(post("/trainings")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(trainingDTO)))
-            .andExpect(status().isOk())
-            .andReturn();
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(trainingDTO)))
+                .andExpect(status().isOk())
+                .andReturn();
 
         TrainingDTO createdTraining = objectMapper.readValue(
-            result.getResponse().getContentAsString(),
-            TrainingDTO.class
-        );
+                result.getResponse().getContentAsString(),
+                TrainingDTO.class);
 
         assertNotNull(createdTraining);
         assertEquals("Test Training", createdTraining.getName());
@@ -139,62 +138,62 @@ class TrainingControllerTests {
 
         // Test missing name
         TrainingDTO badTrainingDTO = TrainingDTO.builder()
-            .type(TrainingTypeDTO.builder().name("CARDIO").build())
-            .date(Date.valueOf("2025-04-21"))
-            .duration(10)
-            .trainee(TraineeDTO.builder()
-                .firstName(trainee.getFirstName())
-                .lastName(trainee.getLastName())
+                .type(TrainingTypeDTO.builder().name("CARDIO").build())
+                .date(Date.valueOf("2025-04-21"))
+                .duration(10)
+                .trainee(TraineeDTO.builder()
+                        .firstName(trainee.getFirstName())
+                        .lastName(trainee.getLastName())
+                        .auth(new AuthenticationDTO(trainee.getUsername(), trainee.getPassword()))
+                        .build())
+                .trainer(TrainerDTO.builder()
+                        .firstName(trainer.getFirstName())
+                        .lastName(trainer.getLastName())
+                        .auth(new AuthenticationDTO(trainer.getUsername(), trainer.getPassword()))
+                        .build())
                 .auth(new AuthenticationDTO(trainee.getUsername(), trainee.getPassword()))
-                .build())
-            .trainer(TrainerDTO.builder()
-                .firstName(trainer.getFirstName())
-                .lastName(trainer.getLastName())
-                .auth(new AuthenticationDTO(trainer.getUsername(), trainer.getPassword()))
-                .build())
-            .auth(new AuthenticationDTO(trainee.getUsername(), trainee.getPassword()))
-            .build();
+                .build();
 
         mockMvc.perform(post("/trainings")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(badTrainingDTO)))
-            .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(badTrainingDTO)))
+                .andExpect(status().isBadRequest());
 
         // Test negative duration
         badTrainingDTO = badTrainingDTO.toBuilder()
-            .name("Test Training")
-            .duration(-1)
-            .build();
+                .name("Test Training")
+                .duration(-1)
+                .build();
 
         mockMvc.perform(post("/trainings")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(badTrainingDTO)))
-            .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(badTrainingDTO)))
+                .andExpect(status().isBadRequest());
 
         // Test missing trainee
         badTrainingDTO = badTrainingDTO.toBuilder()
-            .duration(10)
-            .trainee(null)
-            .build();
+                .duration(10)
+                .trainee(null)
+                .build();
 
         mockMvc.perform(post("/trainings")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(badTrainingDTO)))
-            .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(badTrainingDTO)))
+                .andExpect(status().isBadRequest());
 
         // Test missing trainer
         badTrainingDTO = badTrainingDTO.toBuilder()
-            .trainee(TraineeDTO.builder()
-                .firstName(trainee.getFirstName())
-                .lastName(trainee.getLastName())
-                .auth(new AuthenticationDTO(trainee.getUsername(), trainee.getPassword()))
-                .build())
-            .trainer(null)
-            .build();
+                .trainee(TraineeDTO.builder()
+                        .firstName(trainee.getFirstName())
+                        .lastName(trainee.getLastName())
+                        .auth(new AuthenticationDTO(trainee.getUsername(), trainee.getPassword()))
+                        .build())
+                .trainer(null)
+                .build();
 
         mockMvc.perform(post("/trainings")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(badTrainingDTO)))
-            .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(badTrainingDTO)))
+                .andExpect(status().isBadRequest());
     }
 }

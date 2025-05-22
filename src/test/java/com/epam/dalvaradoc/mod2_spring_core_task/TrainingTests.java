@@ -44,10 +44,10 @@ class TrainingTests {
   private final AuthenticationDTO auth = new AuthenticationDTO("Faunie.Hauck", "password");
 
   @Test
-	void contextLoads() {
-		assertNotNull(trainingService);
-		assertNotNull(trainingRepository);
-	}
+  void contextLoads() {
+    assertNotNull(trainingService);
+    assertNotNull(trainingRepository);
+  }
 
   @Test
   void isInitializing() {
@@ -66,7 +66,8 @@ class TrainingTests {
     assertEquals(2, trainingService.getTrainingsByTraineeUsername("Lenard.Pedgrift").size());
     assertEquals(0, trainingService.getTrainingsByTraineeUsername("xxxxxx.xxxx#4").size());
 
-    assertEquals(1, trainingService.getTrainingsByTraineeUsername("Lenard.Pedgrift", Date.valueOf("2025-01-01"), Date.valueOf("2026-12-31"), "Nobie.Linney", trainingTypeRepository.findByName("PLYOMETRICS")).size());
+    assertEquals(1, trainingService.getTrainingsByTraineeUsername("Lenard.Pedgrift", Date.valueOf("2025-01-01"),
+        Date.valueOf("2026-12-31"), "Nobie.Linney", trainingTypeRepository.findByName("PLYOMETRICS")).size());
   }
 
   @Test
@@ -74,7 +75,8 @@ class TrainingTests {
     assertEquals(7, trainingService.getTrainingsByTrainerUsername("Stafford.Cicco").size());
     assertEquals(0, trainingService.getTrainingsByTrainerUsername("xxxxxx.xxxx").size());
 
-    assertEquals(1, trainingService.getTrainingsByTrainerUsername("Stafford.Cicco", Date.valueOf("2025-01-01"), Date.valueOf("2026-12-31"), "Cobby.Castagneri").size());
+    assertEquals(1, trainingService.getTrainingsByTrainerUsername("Stafford.Cicco", Date.valueOf("2025-01-01"),
+        Date.valueOf("2026-12-31"), "Cobby.Castagneri").size());
   }
 
   @Test
@@ -93,7 +95,7 @@ class TrainingTests {
     TrainingDTO trainingDTO = TrainingDTO.builder()
         .name("Nombre Cualquiera")
         .type(new TrainingTypeDTO(6L, "CARDIO"))
-        .date(Date.valueOf("2025-04-21"))
+        .date(Date.valueOf("2026-04-21"))
         .duration(10)
         .trainee(trainee)
         .trainer(trainer)
@@ -105,14 +107,15 @@ class TrainingTests {
     TrainingDTO training = trainingService.createTraining(trainingDTO, traineeAuth);
     assertNotNull(training);
 
-    Training entityTraining = trainingRepository.findByName(training.getName()).orElseThrow(() -> new IllegalArgumentException(training.getName()));
+    Training entityTraining = trainingRepository.findByName(training.getName())
+        .orElseThrow(() -> new IllegalArgumentException(training.getName()));
 
     assertEquals(training.getName(), entityTraining.getName());
     assertEquals(training.getTrainee().getAuth().getUsername(), entityTraining.getTrainee().getUsername());
     assertEquals(training.getTrainer().getAuth().getUsername(), entityTraining.getTrainer().getUsername());
     assertEquals(training.getType().getName(), entityTraining.getType().getName());
     assertEquals(training.getDate(), entityTraining.getDate());
-    assertEquals(training.getDuration(), entityTraining.getDuration());  
+    assertEquals(training.getDuration(), entityTraining.getDuration());
 
     trainingRepository.deleteById(entityTraining.getTrainingId());
   }
@@ -131,11 +134,16 @@ class TrainingTests {
         .trainer(trainerMapper.toDTO(trainer))
         .build();
 
-    assertThrows(ConstraintViolationException.class, () -> trainingService.createTraining(trainingDTO.toBuilder().name(null).build(), auth));
-    assertThrows(ConstraintViolationException.class, () -> trainingService.createTraining(trainingDTO.toBuilder().trainer(null).build(), auth));
-    assertThrows(ConstraintViolationException.class, () -> trainingService.createTraining(trainingDTO.toBuilder().trainee(null).build(), auth));
-    assertThrows(ConstraintViolationException.class, () -> trainingService.createTraining(trainingDTO.toBuilder().type(null).build(), auth));
-    assertThrows(ConstraintViolationException.class, () -> trainingService.createTraining(trainingDTO.toBuilder().duration(-1).build(), auth));
+    assertThrows(ConstraintViolationException.class,
+        () -> trainingService.createTraining(trainingDTO.toBuilder().name(null).build(), auth));
+    assertThrows(ConstraintViolationException.class,
+        () -> trainingService.createTraining(trainingDTO.toBuilder().trainer(null).build(), auth));
+    assertThrows(ConstraintViolationException.class,
+        () -> trainingService.createTraining(trainingDTO.toBuilder().trainee(null).build(), auth));
+    assertThrows(ConstraintViolationException.class,
+        () -> trainingService.createTraining(trainingDTO.toBuilder().type(null).build(), auth));
+    assertThrows(ConstraintViolationException.class,
+        () -> trainingService.createTraining(trainingDTO.toBuilder().duration(-1).build(), auth));
   }
 
 }
