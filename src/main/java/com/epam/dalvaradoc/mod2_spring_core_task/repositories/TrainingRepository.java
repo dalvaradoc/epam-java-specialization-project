@@ -13,6 +13,7 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
 public interface TrainingRepository extends CrudRepository<Training, String> {
   List<Training> findAll();
   Optional<Training> findByName(String name);
+  void deleteByName(String name);
 
   @Query("SELECT t FROM trainings t WHERE t.trainee.username = :username")
   List<Training> findAllByTraineeUsername(String username);

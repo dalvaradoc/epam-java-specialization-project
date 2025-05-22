@@ -56,7 +56,7 @@ public class CheckCredentialsAspect {
     User user = userRepository.findByUsername(username);
     if (user == null) {
       LOGGER.error("User not found: " + username);
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+      throw new BadCredentialsException("Invalid credentials");
     }
 
     if (Optional.ofNullable(user).filter(u -> u.getPassword().equals(password)).isEmpty()) {

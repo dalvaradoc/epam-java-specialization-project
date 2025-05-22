@@ -175,9 +175,9 @@ public class TrainerService {
         return false;
       }
     }
-    if (filters.get("trainerName") != null) {
-      String trainerName = (String) filters.get("trainerName");
-      if (!training.getTrainer().getFirstName().equals(trainerName) && !training.getTrainer().getLastName().equals(trainerName)){
+    if (filters.get("traineeName") != null) {
+      String traineeName = (String) filters.get("traineeName");
+      if (!training.getTrainee().getFirstName().equals(traineeName) && !training.getTrainee().getLastName().equals(traineeName)){
         return false;
       }
     }
