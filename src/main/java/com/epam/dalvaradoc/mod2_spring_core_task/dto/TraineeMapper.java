@@ -1,12 +1,10 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dto;
 
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainee;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.Mapper;
-import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserMapper;
 
 public class TraineeMapper implements Mapper<Trainee, TraineeDTO> {
   private final TrainingTypeMapper trainingTypeMapper = new TrainingTypeMapper();
