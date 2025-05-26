@@ -1,20 +1,27 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.controllers;
 
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTrainerDTO;
-import com.epam.dalvaradoc.mod2_spring_core_task.services.TrainerService;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTrainerDTO;
+import com.epam.dalvaradoc.mod2_spring_core_task.services.TrainerService;
+import com.epam.dalvaradoc.mod2_spring_core_task.utils.SwaggerExamples;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,6 +29,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/trainers")
@@ -44,27 +52,9 @@ public class TrainerController {
         return ResponseEntity.ok(trainerService.getAllTrainers());
     }
 
-    @Operation(summary = "Get trainer by username", description = "Retrieves trainer information by username")
+    @Operation(summary = "Get trainer by username", description = "Retrieves trainer information by username", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Auth credentials of Trainer", content = @Content(mediaType = "application/json", examples = @ExampleObject(SwaggerExamples.GENERAL_AUTH_REQBODY))))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer details", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = """
-                        {
-                            "firstName": "John",
-                            "lastName": "Doe",
-                            "specialization": {
-                                "name": "CARDIO"
-                            },
-                            "isActive": true,
-                            "trainees": [
-                                {
-                                    "firstName": "Jane",
-                                    "lastName": "Smith",
-                                    "auth": {
-                                        "username": "jane.smith"
-                                    }
-                                }
-                            ]
-                        }
-                    """))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer details", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExamples.TRAINER_GET_RESBODY))),
             @ApiResponse(responseCode = "401", description = "Bad credentials"),
     })
     @GetMapping("/{username}")
@@ -72,14 +62,9 @@ public class TrainerController {
         return ResponseEntity.ok(trainerService.getTrainerByUsername(auth));
     }
 
-    @Operation(summary = "Register new trainer", description = "Creates a new trainer account")
+    @Operation(summary = "Register new trainer", description = "Creates a new trainer account", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Data to create a Trainer", content = @Content(mediaType = "application/json", examples = @ExampleObject(SwaggerExamples.TRAINER_REGISTER_REQBODY))))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Trainer successfully registered", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = """
-                        {
-                            "username": "john.doe",
-                            "password": "generated_password"
-                        }
-                    """))),
+            @ApiResponse(responseCode = "200", description = "Trainer successfully registered", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExamples.TRAINER_REGISTER_RESBODY))),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping
@@ -88,48 +73,9 @@ public class TrainerController {
                 dto.getFirstName(), dto.getLastName(), dto.getSpecialization().getName()));
     }
 
-    @Operation(summary = "Update trainer", description = "Updates existing trainer information", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Trainer data to be updated", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = """
-                {
-                    "firstName": "Jhon",
-                    "lastName": "Verick",
-                    "isActive": true,
-                    "specialization": "CARDIO",
-                    "auth": {
-                        "username": "Brady.Verick",
-                        "password": "password"
-                    }
-                }
-            """))))
+    @Operation(summary = "Update trainer", description = "Updates existing trainer information", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Trainer data to be updated", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExamples.TRAINER_PUT_REQBODY))))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Trainer successfully updated", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = """
-                    {
-                        "auth": {
-                            "username": "Brady.Verick"
-                        },
-                        "firstName": "Jhon",
-                        "lastName": "Verick",
-                        "isActive": true,
-                        "specialization": {
-                            "name": "CARDIO"
-                        },
-                        "trainees": [
-                            {
-                                "auth": {
-                                    "username": "Cobby.Castagneri"
-                                },
-                                "firstName": "Cobby",
-                                "lastName": "Castagneri"
-                            },
-                            {
-                                "auth": {
-                                    "username": "Lenard.Pedgrift"
-                                },
-                                "firstName": "Lenard",
-                                "lastName": "Pedgrift"
-                            },
-                        ]
-                    }
-                    """))),
+            @ApiResponse(responseCode = "200", description = "Trainer successfully updated", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExamples.TRAINER_PUT_RESBODY))),
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "401", description = "Bad credentials")
     })
@@ -138,29 +84,9 @@ public class TrainerController {
         return ResponseEntity.ok(trainerService.updateTrainer(dto, dto.getAuth()));
     }
 
-    @Operation(summary = "Get trainings of trainer", description = "Retrieves a list of trainings for the specified trainer filtered by date range, trainee name and training type", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Authentication data", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = """
-                {
-                    "username": "john.doe",
-                    "password": "generated_password"
-                }
-            """))))
+    @Operation(summary = "Get trainings of trainer", description = "Retrieves a list of trainings for the specified trainer filtered by date range, trainee name and training type", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Authentication data", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExamples.TRAINER_REGISTER_RESBODY))))
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer's trainings", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = """
-                    [
-                        {
-                            "trainee": {
-                                "firstName": "Peggie",
-                                "lastName": "Barthelemy"
-                            },
-                            "name": "erat nulla tempus vivamus",
-                            "type": {
-                                "name": "INTERVAL"
-                            },
-                            "date": "2024-12-11",
-                            "duration": 42
-                        }
-                    ]
-                    """))),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer's trainings", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExamples.TRAINER_GET_TRAININGS_RESBODY))),
             @ApiResponse(responseCode = "401", description = "Bad credentials")
     })
     @GetMapping("/{username}/trainings")
@@ -176,7 +102,7 @@ public class TrainerController {
         return ResponseEntity.ok(trainerService.getTrainings(filters, auth));
     }
 
-    @Operation(summary = "Change active state of trainer", description = "Updates the active/inactive status of the trainer")
+    @Operation(summary = "Change active state of trainer", description = "Updates the active/inactive status of the trainer", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Authentication data", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExamples.TRAINER_REGISTER_RESBODY))))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Active state successfully changed"),
             @ApiResponse(responseCode = "401", description = "Bad credentials")

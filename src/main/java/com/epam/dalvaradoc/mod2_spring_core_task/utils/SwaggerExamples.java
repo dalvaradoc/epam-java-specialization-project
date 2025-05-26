@@ -500,4 +500,217 @@ public class SwaggerExamples {
                 }
             ]
             """;
+
+    public static final String TRAINER_GET_RESBODY = """
+            {
+                "firstName": "Brady",
+                "lastName": "Verick",
+                "isActive": false,
+                "specialization": {
+                    "name": "CARDIO"
+                },
+                "trainees": [
+                    {
+                        "auth": {
+                            "username": "Cobby.Castagneri"
+                        },
+                        "firstName": "Cobby",
+                        "lastName": "Castagneri"
+                    },
+                    {
+                        "auth": {
+                            "username": "Lenard.Pedgrift"
+                        },
+                        "firstName": "Lenard",
+                        "lastName": "Pedgrift"
+                    },
+                    {
+                        "auth": {
+                            "username": "Maynard.Everix"
+                        },
+                        "firstName": "Maynard",
+                        "lastName": "Everix"
+                    },
+                    {
+                        "auth": {
+                            "username": "Montague.Danielou"
+                        },
+                        "firstName": "Montague",
+                        "lastName": "Danielou"
+                    },
+                    {
+                        "auth": {
+                            "username": "Andreana.Davidzon"
+                        },
+                        "firstName": "Andreana",
+                        "lastName": "Davidzon"
+                    },
+                    {
+                        "auth": {
+                            "username": "Peggie.Barthelemy"
+                        },
+                        "firstName": "Lola",
+                        "lastName": "Barthelemy"
+                    },
+                    {
+                        "auth": {
+                            "username": "Binky.Bulman"
+                        },
+                        "firstName": "Binky",
+                        "lastName": "Bulman"
+                    }
+                ]
+            }
+            """;
+
+    public static final String TRAINER_REGISTER_REQBODY = """
+            {
+                "userId": "26",
+                "firstName": "Brady",
+                "lastName": "Verick",
+                "specialization": {
+                    "name": "CARDIO"
+                },
+                "active": false
+            }
+            """;
+
+    public static final String TRAINER_REGISTER_RESBODY = """
+            {
+                "username": "Brady.Verick#2",
+                "password": "W899/VU$=F"
+            }
+            """;
+
+    public static final String TRAINER_PUT_REQBODY = """
+            {
+                "firstName": "Jhon",
+                "lastName": "Verick",
+                "isActive": true,
+                "specialization": "CARDIO",
+                "auth": {
+                    "username": "Brady.Verick",
+                    "password": "password"
+                }
+            }
+            """;
+
+    public static final String TRAINER_PUT_RESBODY = """
+            {
+                "auth": {
+                    "username": "Brady.Verick"
+                },
+                "firstName": "Jhon",
+                "lastName": "Verick",
+                "isActive": true,
+                "specialization": {
+                    "name": "CARDIO"
+                },
+                "trainees": [
+                    {
+                        "auth": {
+                            "username": "Cobby.Castagneri"
+                        },
+                        "firstName": "Cobby",
+                        "lastName": "Castagneri"
+                    },
+                    {
+                        "auth": {
+                            "username": "Lenard.Pedgrift"
+                        },
+                        "firstName": "Lenard",
+                        "lastName": "Pedgrift"
+                    },
+                ]
+            }
+            """;
+
+    public static final String TRAINER_GET_TRAININGS_RESBODY = """
+            [
+                {
+                    "trainee": {
+                        "firstName": "Cobby",
+                        "lastName": "Castagneri"
+                    },
+                    "name": "vel dapibus at diam",
+                    "type": {
+                        "name": "CIRCUIT"
+                    },
+                    "date": "2025-05-16",
+                    "duration": 53
+                },
+                {
+                    "trainee": {
+                        "firstName": "Lenard",
+                        "lastName": "Pedgrift"
+                    },
+                    "name": "donec dapibus duis at",
+                    "type": {
+                        "name": "INTERVAL"
+                    },
+                    "date": "2025-05-03",
+                    "duration": 41
+                },
+                {
+                    "trainee": {
+                        "firstName": "Maynard",
+                        "lastName": "Everix"
+                    },
+                    "name": "volutpat erat quisque erat",
+                    "type": {
+                        "name": "WEIGHT"
+                    },
+                    "date": "2025-07-13",
+                    "duration": 53
+                },
+                {
+                    "trainee": {
+                        "firstName": "Montague",
+                        "lastName": "Danielou"
+                    },
+                    "name": "adipiscing lorem vitae",
+                    "type": {
+                        "name": "CARDIO"
+                    },
+                    "date": "2025-09-23",
+                    "duration": 38
+                },
+                {
+                    "trainee": {
+                        "firstName": "Andreana",
+                        "lastName": "Davidzon"
+                    },
+                    "name": "elementum pellentesque quisque",
+                    "type": {
+                        "name": "PLYOMETRICS"
+                    },
+                    "date": "2024-11-07",
+                    "duration": 8
+                },
+                {
+                    "trainee": {
+                        "firstName": "Lola",
+                        "lastName": "Barthelemy"
+                    },
+                    "name": "erat nulla tempus vivamus",
+                    "type": {
+                        "name": "INTERVAL"
+                    },
+                    "date": "2024-12-11",
+                    "duration": 42
+                },
+                {
+                    "trainee": {
+                        "firstName": "Binky",
+                        "lastName": "Bulman"
+                    },
+                    "name": "ultrices posuere cubilia",
+                    "type": {
+                        "name": "PLYOMETRICS"
+                    },
+                    "date": "2024-05-26",
+                    "duration": 8
+                }
+            ]
+            """;
 }
