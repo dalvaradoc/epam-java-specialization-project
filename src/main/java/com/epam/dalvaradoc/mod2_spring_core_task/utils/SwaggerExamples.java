@@ -713,4 +713,83 @@ public class SwaggerExamples {
                 }
             ]
             """;
+
+    public static final String TRAINING_CREATE_TRAINING_REQBODY = """
+            {
+                "auth": {
+                    "username": "Peggie.Barthelemy",
+                    "password": "xxxx"
+                },
+                "trainee": {
+                    "auth": {
+                        "username": "Peggie.Barthelemy"
+                    }
+                },
+                "trainer": {
+                    "auth": {
+                        "username": "Stafford.Cicco"
+                    }
+                },
+                "type": {
+                    "name": "AEROBIC"
+                },
+                "name": "mejor entrenamiento",
+                "date": "2025-07-07",
+                "duration": 2
+            }
+            """;
+
+    public static final String TRAINING_CREATE_TRAINING_RESBODY = """
+            {
+                "trainee": {
+                    "auth": {
+                        "username": "Peggie.Barthelemy"
+                    },
+                    "firstName": "Peggie",
+                    "lastName": "Barthelemy"
+                },
+                "trainer": {
+                    "auth": {
+                        "username": "Stafford.Cicco"
+                    },
+                    "firstName": "Stafford",
+                    "lastName": "Cicco"
+                },
+                "name": "mejor entrenamiento",
+                "type": {
+                    "name": "AEROBIC"
+                },
+                "date": "2025-07-06",
+                "duration": 2
+            }
+            """;
+
+    public static final String TRAINING_GET_TRAINING_TYPES_RESBODY = """
+            [
+                {
+                    "name": "WEIGHT"
+                },
+                {
+                    "name": "FLEXIBILITY"
+                },
+                {
+                    "name": "BALANCE"
+                },
+                {
+                    "name": "CIRCUIT"
+                },
+                {
+                    "name": "INTERVAL"
+                },
+                {
+                    "name": "CARDIO"
+                },
+                {
+                    "name": "AEROBIC"
+                },
+                {
+                    "name": "PLYOMETRICS"
+                }
+            ]
+            """;
 }
