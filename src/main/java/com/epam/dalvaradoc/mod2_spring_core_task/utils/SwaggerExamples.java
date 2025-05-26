@@ -1,25 +1,503 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.utils;
 
 public class SwaggerExamples {
-  private SwaggerExamples() {
-  }
+    private SwaggerExamples() {
+    }
 
-  public static final String GENERAL_AUTH_REQBODY = """
+    public static final String GENERAL_AUTH_REQBODY = """
+            {
+                "username": "Peggie.Barthelemy",
+                "password": "rD4=ob.G8"
+            }
+            """;
 
-      """;
+    public static final String GENERAL_CHANGE_PASSWORD_REQBODY = """
+            {
+                "username": "john.doe",
+                "password": "currentPassword",
+                "newPassword": "newPassword123"
+            }
+            """;
 
-  public static final String GENERAL_CHANGE_PASSWORD_REQBODY = """
-      {
-          "username": "john.doe",
-          "password": "currentPassword",
-          "newPassword": "newPassword123"
-      }
-      """;
+    public static final String GENERAL_CHANGE_PASSWORD_RESBODY = """
+            {
+                "username": "john.doe",
+                "password": "newPassword123"
+            }
+            """;
 
-  public static final String GENERAL_CHANGE_PASSWORD_RESBODY = """
-          {
-              "username": "john.doe",
-              "password": "newPassword123"
-          }
-      """;
+    public static final String TRAINEE_REGISTER_REQBODY = """
+            {
+                "firstName": "Peggie",
+                "lastName": "Barthelemy",
+                "birthdate": "1953-08-14",
+                "address": "666 Dunning Pass",
+                "active": false
+            }
+            """;
+
+    public static final String TRAINEE_GET_RESBODY = """
+            {
+                "firstName": "Peggie",
+                "lastName": "Barthelemy",
+                "isActive": false,
+                "birthdate": "1953-08-14",
+                "address": "666 Dunning Pass",
+                "trainers": [
+                    {
+                        "auth": {
+                            "username": "Stafford.Cicco"
+                        },
+                        "firstName": "Stafford",
+                        "lastName": "Cicco",
+                        "specialization": {
+                            "name": "CARDIO"
+                        }
+                    },
+                    {
+                        "auth": {
+                            "username": "Brady.Verick"
+                        },
+                        "firstName": "Brady",
+                        "lastName": "Verick",
+                        "specialization": {
+                            "name": "CARDIO"
+                        }
+                    },
+                    {
+                        "auth": {
+                            "username": "Prue.Nawton"
+                        },
+                        "firstName": "Prue",
+                        "lastName": "Nawton",
+                        "specialization": {
+                            "name": "CIRCUIT"
+                        }
+                    }
+                ]
+            }
+            """;
+
+    public static final String TRAINEE_PUT_REQBODY = """
+            {
+                "firstName": "Lola",
+                "lastName": "Barthelemy",
+                "isActive": false,
+                "birthdate": "1953-08-14",
+                "address": "666 Dunning Pass",
+                "auth": {
+                    "username": "Peggie.Barthelemy",
+                    "password": "rD4=ob.G8"
+                }
+            }
+            """;
+
+    public static final String TRAINEE_PUT_RESBODY = """
+            {
+                "firstName": "Lola",
+                "lastName": "Barthelemy",
+                "isActive": false,
+                "birthdate": "1953-08-14",
+                "address": "666 Dunning Pass",
+                "trainers": [
+                    {
+                        "auth": {
+                            "username": "Stafford.Cicco"
+                        },
+                        "firstName": "Stafford",
+                        "lastName": "Cicco",
+                        "specialization": {
+                            "name": "CARDIO"
+                        }
+                    },
+                    {
+                        "auth": {
+                            "username": "Brady.Verick"
+                        },
+                        "firstName": "Brady",
+                        "lastName": "Verick",
+                        "specialization": {
+                            "name": "CARDIO"
+                        }
+                    },
+                    {
+                        "auth": {
+                            "username": "Prue.Nawton"
+                        },
+                        "firstName": "Prue",
+                        "lastName": "Nawton",
+                        "specialization": {
+                            "name": "CIRCUIT"
+                        }
+                    }
+                ]
+            }
+            """;
+
+    public static final String TRAINEE_GET_NOT_ASIGNED_TRAINERS_RESBODY = """
+            [
+                {
+                    "auth": {
+                        "username": "Stafford.Cicco"
+                    },
+                    "firstName": "Stafford",
+                    "lastName": "Cicco",
+                    "isActive": true,
+                    "specialization": {
+                        "name": "CARDIO"
+                    },
+                    "trainees": [
+                        {
+                            "auth": {
+                                "username": "Peggie.Barthelemy"
+                            },
+                            "firstName": "Lola",
+                            "lastName": "Barthelemy"
+                        },
+                        {
+                            "auth": {
+                                "username": "Marne.Nuton"
+                            },
+                            "firstName": "Marne",
+                            "lastName": "Nuton"
+                        },
+                        {
+                            "auth": {
+                                "username": "Wilbur.Casaccio"
+                            },
+                            "firstName": "Wilbur",
+                            "lastName": "Casaccio"
+                        },
+                        {
+                            "auth": {
+                                "username": "Karel.Younghusband"
+                            },
+                            "firstName": "Karel",
+                            "lastName": "Younghusband"
+                        },
+                        {
+                            "auth": {
+                                "username": "Tull.Burkert"
+                            },
+                            "firstName": "Tull",
+                            "lastName": "Burkert"
+                        },
+                        {
+                            "auth": {
+                                "username": "Mina.Stenner"
+                            },
+                            "firstName": "Mina",
+                            "lastName": "Stenner"
+                        },
+                        {
+                            "auth": {
+                                "username": "Cobby.Castagneri"
+                            },
+                            "firstName": "Cobby",
+                            "lastName": "Castagneri"
+                        }
+                    ]
+                },
+                {
+                    "auth": {
+                        "username": "Prue.Nawton"
+                    },
+                    "firstName": "Prue",
+                    "lastName": "Nawton",
+                    "isActive": true,
+                    "specialization": {
+                        "name": "CIRCUIT"
+                    },
+                    "trainees": [
+                        {
+                            "auth": {
+                                "username": "Maynard.Everix"
+                            },
+                            "firstName": "Maynard",
+                            "lastName": "Everix"
+                        },
+                        {
+                            "auth": {
+                                "username": "Cobby.Castagneri"
+                            },
+                            "firstName": "Cobby",
+                            "lastName": "Castagneri"
+                        },
+                        {
+                            "auth": {
+                                "username": "Marne.Nuton"
+                            },
+                            "firstName": "Marne",
+                            "lastName": "Nuton"
+                        },
+                        {
+                            "auth": {
+                                "username": "Abbie.Bernocchi"
+                            },
+                            "firstName": "Abbie",
+                            "lastName": "Bernocchi"
+                        },
+                        {
+                            "auth": {
+                                "username": "Cirillo.Gouldthorp"
+                            },
+                            "firstName": "Cirillo",
+                            "lastName": "Gouldthorp"
+                        },
+                        {
+                            "auth": {
+                                "username": "Andreana.Davidzon"
+                            },
+                            "firstName": "Andreana",
+                            "lastName": "Davidzon"
+                        },
+                        {
+                            "auth": {
+                                "username": "Peggie.Barthelemy"
+                            },
+                            "firstName": "Lola",
+                            "lastName": "Barthelemy"
+                        }
+                    ]
+                },
+                {
+                    "auth": {
+                        "username": "Caryl.Shory"
+                    },
+                    "firstName": "Caryl",
+                    "lastName": "Shory",
+                    "isActive": true,
+                    "specialization": {
+                        "name": "CARDIO"
+                    },
+                    "trainees": [
+                        {
+                            "auth": {
+                                "username": "Thaxter.Randalston"
+                            },
+                            "firstName": "Thaxter",
+                            "lastName": "Randalston"
+                        },
+                        {
+                            "auth": {
+                                "username": "Thaxter.Randalston"
+                            },
+                            "firstName": "Thaxter",
+                            "lastName": "Randalston"
+                        }
+                    ]
+                },
+                {
+                    "auth": {
+                        "username": "Rora.Loffhead"
+                    },
+                    "firstName": "Rora",
+                    "lastName": "Loffhead",
+                    "isActive": true,
+                    "specialization": {
+                        "name": "WEIGHT"
+                    },
+                    "trainees": [
+                        {
+                            "auth": {
+                                "username": "Nial.Parry"
+                            },
+                            "firstName": "Nial",
+                            "lastName": "Parry"
+                        },
+                        {
+                            "auth": {
+                                "username": "Jon.Sandwith"
+                            },
+                            "firstName": "Jon",
+                            "lastName": "Sandwith"
+                        },
+                        {
+                            "auth": {
+                                "username": "Nial.Parry"
+                            },
+                            "firstName": "Nial",
+                            "lastName": "Parry"
+                        },
+                        {
+                            "auth": {
+                                "username": "Cirillo.Gouldthorp"
+                            },
+                            "firstName": "Cirillo",
+                            "lastName": "Gouldthorp"
+                        },
+                        {
+                            "auth": {
+                                "username": "Andreana.Davidzon"
+                            },
+                            "firstName": "Andreana",
+                            "lastName": "Davidzon"
+                        },
+                        {
+                            "auth": {
+                                "username": "Tull.Burkert"
+                            },
+                            "firstName": "Tull",
+                            "lastName": "Burkert"
+                        },
+                        {
+                            "auth": {
+                                "username": "Thaxter.Randalston"
+                            },
+                            "firstName": "Thaxter",
+                            "lastName": "Randalston"
+                        },
+                        {
+                            "auth": {
+                                "username": "Maynard.Everix"
+                            },
+                            "firstName": "Maynard",
+                            "lastName": "Everix"
+                        },
+                        {
+                            "auth": {
+                                "username": "Cirillo.Gouldthorp"
+                            },
+                            "firstName": "Cirillo",
+                            "lastName": "Gouldthorp"
+                        },
+                        {
+                            "auth": {
+                                "username": "Marne.Nuton"
+                            },
+                            "firstName": "Marne",
+                            "lastName": "Nuton"
+                        },
+                        {
+                            "auth": {
+                                "username": "Woodman.Mallinson"
+                            },
+                            "firstName": "Woodman",
+                            "lastName": "Mallinson"
+                        }
+                    ]
+                }
+            ]
+            """;
+
+    public static final String TRAINEE_ADD_TRAINER_TO_LIST_REQBODY = """
+            {
+                "auth": {
+                    "username": "Peggie.Barthelemy",
+                    "password": "rD4=ob.G8"
+                },
+                "trainersUsernames": [
+                    "not.trainer",
+                    "Brady.Verick"
+                ]
+            }
+            """;
+
+    public static final String TRAINEE_ADD_TRAINER_TO_LIST_RESBODY = """
+            [
+                {
+                    "auth": {
+                        "username": "Brady.Verick"
+                    },
+                    "firstName": "Brady",
+                    "lastName": "Verick",
+                    "isActive": false,
+                    "specialization": {
+                        "name": "CARDIO"
+                    },
+                    "trainees": [
+                        {
+                            "auth": {
+                                "username": "Cobby.Castagneri"
+                            },
+                            "firstName": "Cobby",
+                            "lastName": "Castagneri"
+                        },
+                        {
+                            "auth": {
+                                "username": "Lenard.Pedgrift"
+                            },
+                            "firstName": "Lenard",
+                            "lastName": "Pedgrift"
+                        },
+                        {
+                            "auth": {
+                                "username": "Maynard.Everix"
+                            },
+                            "firstName": "Maynard",
+                            "lastName": "Everix"
+                        },
+                        {
+                            "auth": {
+                                "username": "Montague.Danielou"
+                            },
+                            "firstName": "Montague",
+                            "lastName": "Danielou"
+                        },
+                        {
+                            "auth": {
+                                "username": "Andreana.Davidzon"
+                            },
+                            "firstName": "Andreana",
+                            "lastName": "Davidzon"
+                        },
+                        {
+                            "auth": {
+                                "username": "Peggie.Barthelemy"
+                            },
+                            "firstName": "Lola",
+                            "lastName": "Barthelemy"
+                        },
+                        {
+                            "auth": {
+                                "username": "Binky.Bulman"
+                            },
+                            "firstName": "Binky",
+                            "lastName": "Bulman"
+                        }
+                    ]
+                }
+            ]
+            """;
+
+    public static final String TRAINEE_GET_TRAININGS_RESBODY = """
+            [
+                {
+                    "trainer": {
+                        "firstName": "Stafford",
+                        "lastName": "Cicco"
+                    },
+                    "name": "at turpis a",
+                    "type": {
+                        "name": "AEROBIC"
+                    },
+                    "date": "2026-01-07",
+                    "duration": 27
+                },
+                {
+                    "trainer": {
+                        "firstName": "Brady",
+                        "lastName": "Verick"
+                    },
+                    "name": "erat nulla tempus vivamus",
+                    "type": {
+                        "name": "INTERVAL"
+                    },
+                    "date": "2024-12-11",
+                    "duration": 42
+                },
+                {
+                    "trainer": {
+                        "firstName": "Prue",
+                        "lastName": "Nawton"
+                    },
+                    "name": "rhoncus aliquam lacus",
+                    "type": {
+                        "name": "CARDIO"
+                    },
+                    "date": "2025-03-07",
+                    "duration": 23
+                }
+            ]
+            """;
 }
