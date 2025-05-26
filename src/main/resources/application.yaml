@@ -19,16 +19,16 @@ spring:
   sql:
     init:
       mode: always
-logging:
-  pattern:
-    console: "%clr(%d{yyyy-MM-dd'T'HH:mm}){yellow} %clr(%marker){blue} %clr([${LOG_LEVEL_PATTERN:%5p}]) [%X{txID}] %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
-  level:
-    ROOT: INFO
-    org:
-      springframework:
-        transaction: DEBUG
-        orm:
-          jpa: DEBUG
+# logging:
+#   pattern:
+#     console: "%clr(%d{yyyy-MM-dd'T'HH:mm}){yellow} %clr(%marker){blue} %clr([${LOG_LEVEL_PATTERN:%5p}]) [%X{txID}] %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+#   level:
+#     ROOT: INFO
+#     org:
+#       springframework:
+#         transaction: DEBUG
+#         orm:
+#           jpa: DEBUG
 # my.properties.trainees-data-file=src/main/resources/mock-data/trainees-data.json
 # my.properties.trainers-data-file=src/main/resources/mock-data/trainers-data.json
 # my.properties.training-data-file=src/main/resources/mock-data/training-data.json

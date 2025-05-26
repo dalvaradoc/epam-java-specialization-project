@@ -1,10 +1,11 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dto;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,7 +20,7 @@ public class AuthenticationDTO {
   private String username;
 
   @NotBlank(message = "Password is required")
-  @Size(min = 8, max = 32, message = "Password must be between 8 and 32 characters")
+  @Length(min = 8, max = 32, message = "Password must be between 8 and 32 characters")
   @Schema(description = "User's password", example = "Password123!", minLength = 8, maxLength = 32, format = "password")
   private String password;
 

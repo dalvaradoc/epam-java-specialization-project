@@ -3,6 +3,8 @@ package com.epam.dalvaradoc.mod2_spring_core_task.dto;
 import java.sql.Date;
 import java.util.List;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.NameLikeStringConstraint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -42,7 +44,7 @@ public class TraineeDTO {
   @Schema(description = "Trainee's date of birth", example = "1990-01-01")
   private Date birthdate;
 
-  @NotBlank(message = "Address is required")
+  @Length(min = 3, max = 50, message = "The address must be between 3 and 50 characters")
   @Schema(description = "Trainee's address", example = "123 Main St, City, Country")
   private String address;
 

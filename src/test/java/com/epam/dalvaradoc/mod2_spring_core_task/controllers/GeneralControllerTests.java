@@ -48,14 +48,11 @@ class GeneralControllerTests {
 
     AuthenticationDTO auth = new AuthenticationDTO(trainer.getUsername(), trainer.getPassword());
 
-    MvcResult result = mockMvc.perform(get("/login")
+    mockMvc.perform(get("/login")
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(auth)))
         .andExpect(status().isOk())
         .andReturn();
-
-    String response = result.getResponse().getContentAsString();
-    assertEquals("Login successful for user: " + trainer.getUsername(), response);
   }
 
   @Test

@@ -29,20 +29,20 @@ public class UserService {
 
   @CheckCredentials
   public void login(@Valid AuthenticationDTO auth) {
-    //If the login not successful an exception will be thrown
+    // If the login not successful an exception will be thrown
   }
 
   @CheckCredentials
   public AuthenticationDTO changePassword(@NotNull @NotEmpty String newPassword, @Valid AuthenticationDTO auth) {
     Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
-    if (trainee != null){
+    if (trainee != null) {
       trainee.setPassword(newPassword);
       traineeRepository.save(trainee);
       return new AuthenticationDTO(auth.getUsername(), newPassword);
     }
 
     Trainer trainer = trainerRepository.findByUsername(auth.getUsername());
-    if (trainer != null){
+    if (trainer != null) {
       trainer.setPassword(newPassword);
       trainerRepository.save(trainer);
       return new AuthenticationDTO(auth.getUsername(), newPassword);

@@ -1,15 +1,14 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.dto;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
+import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingTypeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.Mapper;
 
 public class TrainingTypeMapper implements Mapper<TrainingType, TrainingTypeDTO> {
+
   @Override
   public TrainingType toObject(TrainingTypeDTO dto) {
-    TrainingType trainingType = new TrainingType();
-    trainingType.setTrainingTypeId(dto.getId());
-    trainingType.setName(dto.getName());
-    return trainingType;
+    return new TrainingType(dto.getId(), dto.getName());
   }
 
   @Override
@@ -18,4 +17,5 @@ public class TrainingTypeMapper implements Mapper<TrainingType, TrainingTypeDTO>
         .name(object.getName())
         .build();
   }
+
 }
