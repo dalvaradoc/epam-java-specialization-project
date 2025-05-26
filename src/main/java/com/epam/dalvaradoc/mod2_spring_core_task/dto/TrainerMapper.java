@@ -2,7 +2,6 @@ package com.epam.dalvaradoc.mod2_spring_core_task.dto;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
-import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.Mapper;
 
 public class TrainerMapper implements Mapper<Trainer, TrainerDTO> {

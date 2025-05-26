@@ -1,17 +1,11 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.services;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -30,7 +24,6 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTraineeDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TraineeRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
-import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.utils.UserUtils;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.NameLikeStringConstraint;
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
@@ -46,18 +39,16 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class TraineeService {
   private TraineeRepository traineeRepository;
-  private TrainingRepository trainingRepository;
   private TrainerRepository trainerRepository;
 
   private UserUtils userUtils;
   private final TraineeMapper mapper = new TraineeMapper();
   private final TrainerMapper trainerMapper = new TrainerMapper();
-  private final TrainingMapper trainingMapper = new TrainingMapper();  
+  private final TrainingMapper trainingMapper = new TrainingMapper();
 
   @Autowired
-  public TraineeService(TraineeRepository traineeRepository, TrainingRepository trainingRepository, TrainerRepository trainerRepository, UserUtils userUtils) {
+  public TraineeService(TraineeRepository traineeRepository, TrainerRepository trainerRepository, UserUtils userUtils) {
     this.traineeRepository = traineeRepository;
-    this.trainingRepository = trainingRepository;
     this.trainerRepository = trainerRepository;
     this.userUtils = userUtils;
   }
@@ -77,10 +68,11 @@ public class TraineeService {
         .orElse(null);
   }
 
-  public AuthenticationDTO createTrainee(@NameLikeStringConstraint String firstName, @NameLikeStringConstraint String lastName, @NotNull String address, @Past Date birthdate){
+  public AuthenticationDTO createTrainee(@NameLikeStringConstraint String firstName,
+      @NameLikeStringConstraint String lastName, @NotNull String address, @Past Date birthdate) {
     String username = userUtils.createUsername(firstName, lastName);
     String password = UserUtils.getSaltString();
-    
+
     Trainee trainee = new Trainee();
     trainee.setFirstName(firstName);
     trainee.setLastName(lastName);
@@ -96,9 +88,10 @@ public class TraineeService {
 
   @CheckCredentials
   public TraineeDTO updateTrainee(@Valid UpdateTraineeDTO newTrainee, @Valid AuthenticationDTO auth) {
-    Optional<Trainee> traineeOptional = Optional.ofNullable(traineeRepository.findByUsername(newTrainee.getAuth().getUsername()));
+    Optional<Trainee> traineeOptional = Optional
+        .ofNullable(traineeRepository.findByUsername(newTrainee.getAuth().getUsername()));
 
-    if(traineeOptional.isEmpty()){
+    if (traineeOptional.isEmpty()) {
       return null;
     }
 
@@ -122,9 +115,10 @@ public class TraineeService {
   }
 
   @CheckCredentials
-  public boolean changePassword(@NotNull String newPassword, @UsernameConstraint String username, @NotNull String password) {
+  public boolean changePassword(@NotNull String newPassword, @UsernameConstraint String username,
+      @NotNull String password) {
     Trainee trainee = traineeRepository.findByUsername(username);
-    if (trainee == null){
+    if (trainee == null) {
       return false;
     }
 
@@ -137,7 +131,7 @@ public class TraineeService {
   @CheckCredentials
   public boolean changeActiveState(boolean active, @Valid AuthenticationDTO auth) {
     Optional<Trainee> traineeOptional = Optional.ofNullable(traineeRepository.findByUsername(auth.getUsername()));
-    if (traineeOptional.isEmpty()){
+    if (traineeOptional.isEmpty()) {
       return false;
     }
     Trainee trainee = traineeOptional.get();
@@ -168,19 +162,19 @@ public class TraineeService {
     }
     List<Trainer> allTrainers = trainerRepository.findAll();
 
-    if (trainee.getTrainers() == null){
+    if (trainee.getTrainers() == null) {
       return allTrainers
-        .stream()
-        .filter(trainer -> trainer.isActive())
-        .map(trainerMapper::toDTO)
-        .toList();
+          .stream()
+          .filter(trainer -> trainer.isActive())
+          .map(trainerMapper::toDTO)
+          .toList();
     }
 
     return allTrainers
-      .stream()
-      .filter(trainer -> trainer.isActive() && !trainee.getTrainers().contains(trainer))
-      .map(trainerMapper::toDTO)
-      .toList();
+        .stream()
+        .filter(trainer -> trainer.isActive() && !trainee.getTrainers().contains(trainer))
+        .map(trainerMapper::toDTO)
+        .toList();
   }
 
   @CheckCredentials
@@ -190,7 +184,7 @@ public class TraineeService {
       return null;
     }
 
-    if (trainee.getTrainers() == null){
+    if (trainee.getTrainers() == null) {
       trainee.setTrainers(new HashSet<>());
     }
 
@@ -205,56 +199,56 @@ public class TraineeService {
     LOGGER.info("Trainee trainers list updated: " + trainee.getTrainers().toString());
 
     return trainee.getTrainers()
-      .stream()
-      .map(trainerMapper::toDTO)
-      .toList();
+        .stream()
+        .map(trainerMapper::toDTO)
+        .toList();
   }
 
   @CheckCredentials
-  public List<TrainingDTO> getTrainings(Map<String,Object> filters, @Valid AuthenticationDTO auth) {
+  public List<TrainingDTO> getTrainings(Map<String, Object> filters, @Valid AuthenticationDTO auth) {
     Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
     if (trainee == null) {
       return List.of();
     }
 
     return trainee.getTrainings()
-      .stream()
-      .filter(training -> getTrainingFiltersPredicate(filters, training))
-      .map(trainingMapper::toDTO)
-      .map(dto -> {
-        dto.setTrainee(null);
-        dto.setTrainer(TrainerDTO.builder()
-            .firstName(dto.getTrainer().getFirstName())
-            .lastName(dto.getTrainer().getLastName())
-            .build());
-        return dto;
-      })
-      .toList();
+        .stream()
+        .filter(training -> getTrainingFiltersPredicate(filters, training))
+        .map(trainingMapper::toDTO)
+        .map(dto -> {
+          dto.setTrainee(null);
+          dto.setTrainer(TrainerDTO.builder()
+              .firstName(dto.getTrainer().getFirstName())
+              .lastName(dto.getTrainer().getLastName())
+              .build());
+          return dto;
+        })
+        .toList();
   }
-
 
   private boolean getTrainingFiltersPredicate(Map<String, Object> filters, Training training) {
     if (filters.get("from") != null) {
       Date from = (Date) filters.get("from");
-      if (training.getDate().before(from)){
+      if (training.getDate().before(from)) {
         return false;
       }
     }
     if (filters.get("to") != null) {
       Date to = (Date) filters.get("to");
-      if (training.getDate().after(to)){
+      if (training.getDate().after(to)) {
         return false;
       }
     }
     if (filters.get("trainerName") != null) {
       String trainerName = (String) filters.get("trainerName");
-      if (!training.getTrainer().getFirstName().equals(trainerName) && !training.getTrainer().getLastName().equals(trainerName)){
+      if (!training.getTrainer().getFirstName().equals(trainerName)
+          && !training.getTrainer().getLastName().equals(trainerName)) {
         return false;
       }
     }
     if (filters.get("trainingType") != null) {
       String trainingType = (String) filters.get("trainingType");
-      if (!training.getType().getName().equals(trainingType)){
+      if (!training.getType().getName().equals(trainingType)) {
         return false;
       }
     }

@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.annotations.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -15,8 +14,6 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dao.Trainer;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.Training;
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.TrainingType;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.TraineeMapper;
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
@@ -29,7 +26,6 @@ import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingTypeReposi
 import com.epam.dalvaradoc.mod2_spring_core_task.validations.UsernameConstraint;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 @Service
@@ -71,7 +67,8 @@ public class TrainingService {
         .orElse(null);
   }
 
-  public List<TrainingDTO> getTrainingsByTraineeUsername(@UsernameConstraint String traineeUsername, Date from, Date to, @UsernameConstraint String trainerUsername, @NotNull TrainingType type) {
+  public List<TrainingDTO> getTrainingsByTraineeUsername(@UsernameConstraint String traineeUsername, Date from, Date to,
+      @UsernameConstraint String trainerUsername, @NotNull TrainingType type) {
     return Optional.ofNullable(traineeUsername)
         .map(username -> trainingRepository.findAllByTraineeUsername(traineeUsername, from, to, trainerUsername, type))
         .map(list -> list.stream().map(mapper::toDTO).toList())
@@ -85,8 +82,10 @@ public class TrainingService {
         .orElse(null);
   }
 
-  public List<TrainingDTO> getTrainingsByTrainerUsername(@UsernameConstraint String trainerUsername, Date from, Date to, @UsernameConstraint String traineeUsername) {
-    return Optional.ofNullable(trainerUsername) .map(username -> trainingRepository.findAllByTrainerUsername(trainerUsername, from, to, traineeUsername))
+  public List<TrainingDTO> getTrainingsByTrainerUsername(@UsernameConstraint String trainerUsername, Date from, Date to,
+      @UsernameConstraint String traineeUsername) {
+    return Optional.ofNullable(trainerUsername)
+        .map(username -> trainingRepository.findAllByTrainerUsername(trainerUsername, from, to, traineeUsername))
         .map(list -> list.stream().map(mapper::toDTO).toList())
         .orElse(null);
   }
@@ -104,10 +103,12 @@ public class TrainingService {
       throw new IllegalArgumentException("User not found");
     }
 
-    if (trainee != null && dto.getTrainee().getAuth() != null && !auth.getUsername().equals(dto.getTrainee().getAuth().getUsername())) {
+    if (trainee != null && dto.getTrainee().getAuth() != null
+        && !auth.getUsername().equals(dto.getTrainee().getAuth().getUsername())) {
       throw new BadCredentialsException("Trainee username does not match");
     }
-    if (trainer != null && dto.getTrainer().getAuth() != null && !auth.getUsername().equals(dto.getTrainer().getAuth().getUsername())) {
+    if (trainer != null && dto.getTrainer().getAuth() != null
+        && !auth.getUsername().equals(dto.getTrainer().getAuth().getUsername())) {
       throw new BadCredentialsException("Trainee username does not match");
     }
 
@@ -125,11 +126,10 @@ public class TrainingService {
     training.setType(trainingTypeRepository.findByName(dto.getType().getName()));
     training.setDate(dto.getDate());
     training.setDuration(dto.getDuration());
-    
+
     trainingRepository.save(training);
     return mapper.toDTO(training);
   }
-
 
   @CheckCredentials
   public List<TrainingTypeDTO> getAllTrainingTypes(@Valid AuthenticationDTO auth) {

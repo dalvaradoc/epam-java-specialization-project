@@ -18,8 +18,6 @@ import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainerMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingMapper;
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeDTO;
-import com.epam.dalvaradoc.mod2_spring_core_task.dto.TrainingTypeMapper;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.UpdateTrainerDTO;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainerRepository;
 import com.epam.dalvaradoc.mod2_spring_core_task.repositories.TrainingTypeRepository;
@@ -35,16 +33,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Validated
 public class TrainerService {
-  private TrainerRepository trainerRepository; 
+  private TrainerRepository trainerRepository;
   private TrainingTypeRepository trainingTypeRepository;
 
   private UserUtils userUtils;
   private final TrainerMapper mapper = new TrainerMapper();
-  private final TrainingTypeMapper trainingTypeMapper = new TrainingTypeMapper();
   private final TrainingMapper trainingMapper = new TrainingMapper();
 
   @Autowired
-  public TrainerService(TrainerRepository trainerRepository, TrainingTypeRepository trainingTypeRepository, UserUtils userUtils) {
+  public TrainerService(TrainerRepository trainerRepository, TrainingTypeRepository trainingTypeRepository,
+      UserUtils userUtils) {
     this.trainerRepository = trainerRepository;
     this.trainingTypeRepository = trainingTypeRepository;
     this.userUtils = userUtils;
@@ -58,7 +56,8 @@ public class TrainerService {
   }
 
   @CheckCredentials
-  public TrainerDTO getTrainerById(@NotNull String userId, @UsernameConstraint String username, @NotNull String password) {
+  public TrainerDTO getTrainerById(@NotNull String userId, @UsernameConstraint String username,
+      @NotNull String password) {
     return Optional.ofNullable(userId)
         .map(trainerRepository::findById)
         .flatMap(opt -> opt)
@@ -78,10 +77,11 @@ public class TrainerService {
         .orElse(null);
   }
 
-  public AuthenticationDTO createTrainer(@NameLikeStringConstraint String firstName, @NameLikeStringConstraint String lastName, @NotNull String specialization){
+  public AuthenticationDTO createTrainer(@NameLikeStringConstraint String firstName,
+      @NameLikeStringConstraint String lastName, @NotNull String specialization) {
     String username = userUtils.createUsername(firstName, lastName);
     String password = UserUtils.getSaltString();
-    
+
     Trainer trainer = new Trainer();
     trainer.setFirstName(firstName);
     trainer.setLastName(lastName);
@@ -96,9 +96,10 @@ public class TrainerService {
   }
 
   @CheckCredentials
-  public TrainerDTO updateTrainer(@Valid UpdateTrainerDTO dto, @Valid AuthenticationDTO auth){
-    Optional<Trainer> trainerOptional = Optional.ofNullable(trainerRepository.findByUsername(dto.getAuth().getUsername()));
-    if (trainerOptional.isEmpty()){
+  public TrainerDTO updateTrainer(@Valid UpdateTrainerDTO dto, @Valid AuthenticationDTO auth) {
+    Optional<Trainer> trainerOptional = Optional
+        .ofNullable(trainerRepository.findByUsername(dto.getAuth().getUsername()));
+    if (trainerOptional.isEmpty()) {
       return null;
     }
 
@@ -117,7 +118,7 @@ public class TrainerService {
   @CheckCredentials
   public boolean changeActiveState(boolean active, @Valid AuthenticationDTO auth) {
     Optional<Trainer> trainerOptional = Optional.ofNullable(trainerRepository.findByUsername(auth.getUsername()));
-    if (trainerOptional.isEmpty()){
+    if (trainerOptional.isEmpty()) {
       return false;
     }
     Trainer trainer = trainerOptional.get();
@@ -128,62 +129,65 @@ public class TrainerService {
   }
 
   @CheckCredentials
-  public boolean changePassword(@NotNull String newPassword, @UsernameConstraint String username, @NotNull String password) {
+  public boolean changePassword(@NotNull String newPassword, @UsernameConstraint String username,
+      @NotNull String password) {
     Trainer trainer = trainerRepository.findByUsername(username);
-    if (trainer == null){
+    if (trainer == null) {
       return false;
     }
 
     trainer.setPassword(newPassword);
     trainerRepository.save(trainer);
-    LOGGER.info("Trainer password changed: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
+    LOGGER.info("Trainer password changed: " + trainer.getUserId() + " " + trainer.getFirstName() + " "
+        + trainer.getLastName());
     return true;
   }
 
   @CheckCredentials
-  public List<TrainingDTO> getTrainings(Map<String,Object> filters, @Valid AuthenticationDTO auth) {
+  public List<TrainingDTO> getTrainings(Map<String, Object> filters, @Valid AuthenticationDTO auth) {
     Trainer trainer = trainerRepository.findByUsername(auth.getUsername());
     if (trainer == null) {
       return List.of();
     }
 
     return trainer.getTrainings()
-      .stream()
-      .filter(training -> getTrainingFiltersPredicate(filters, training))
-      .map(trainingMapper::toDTO)
-      .map(dto -> {
-        dto.setTrainee(TraineeDTO.builder()
-            .firstName(dto.getTrainee().getFirstName())
-            .lastName(dto.getTrainee().getLastName())
-            .build());
-        dto.setTrainer(null);
-        return dto;
-      })
-      .toList();
+        .stream()
+        .filter(training -> getTrainingFiltersPredicate(filters, training))
+        .map(trainingMapper::toDTO)
+        .map(dto -> {
+          dto.setTrainee(TraineeDTO.builder()
+              .firstName(dto.getTrainee().getFirstName())
+              .lastName(dto.getTrainee().getLastName())
+              .build());
+          dto.setTrainer(null);
+          return dto;
+        })
+        .toList();
   }
 
   private boolean getTrainingFiltersPredicate(Map<String, Object> filters, Training training) {
     if (filters.get("from") != null) {
       Date from = (Date) filters.get("from");
-      if (training.getDate().before(from)){
+      if (training.getDate().before(from)) {
         return false;
       }
     }
     if (filters.get("to") != null) {
       Date to = (Date) filters.get("to");
-      if (training.getDate().after(to)){
+      if (training.getDate().after(to)) {
         return false;
       }
     }
     if (filters.get("traineeName") != null) {
       String traineeName = (String) filters.get("traineeName");
-      if (!training.getTrainee().getFirstName().equals(traineeName) && !training.getTrainee().getLastName().equals(traineeName)){
+      if (!training.getTrainee().getFirstName().equals(traineeName)
+          && !training.getTrainee().getLastName().equals(traineeName)) {
         return false;
       }
     }
     if (filters.get("trainingType") != null) {
       String trainingType = (String) filters.get("trainingType");
-      if (!training.getType().getName().equals(trainingType)){
+      if (!training.getType().getName().equals(trainingType)) {
         return false;
       }
     }

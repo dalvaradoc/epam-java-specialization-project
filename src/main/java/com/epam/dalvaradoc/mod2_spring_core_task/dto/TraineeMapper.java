@@ -51,28 +51,4 @@ public class TraineeMapper implements Mapper<Trainee, TraineeDTO> {
             .toList())
         .build();
   }
-
-//   @Override
-//   public TraineeDTO toDTOwithoutPassword(Trainee object) {
-//     return TraineeDTO.builder()
-//         .userId(object.getUserId())
-//         .firstName(object.getFirstName())
-//         .lastName(object.getLastName())
-//         .isActive(object.isActive())
-//         .birthdate(object.getBirthdate())
-//         .address(object.getAddress())
-//         .auth(new AuthenticationDTO(object.getUsername(), null))
-//         .trainers(object.getTrainers()
-//             .stream()
-//             .map(trainer -> TrainerDTO.builder()
-//                 .auth(AuthenticationDTO.builder()
-//                     .username(trainer.getUsername())
-//                     .build())
-//                 .firstName(trainer.getFirstName())
-//                 .lastName(trainer.getLastName())
-//                 .specialization(trainingTypeMapper.toDTO(trainer.getSpecialization()))
-//                 .build())
-//             .toList())
-//         .build();
-//   }
 }

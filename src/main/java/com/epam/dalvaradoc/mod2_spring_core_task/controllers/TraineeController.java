@@ -47,14 +47,6 @@ public class TraineeController {
         this.traineeService = traineeService;
     }
 
-    @Operation(summary = "Get all trainees", description = "This endpoint is for tests only. Retrieves a list of all registered trainees")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Successfully retrievedtrainees list")
-    })
-    @GetMapping
-    public ResponseEntity<List<TraineeDTO>> getAllTrainees() {
-        return ResponseEntity.ok(traineeService.getAllTrainees());
-    }
-
     @Operation(summary = "Register new trainee", description = "Creates a new trainee account", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Trainee registration details", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExamples.TRAINEE_REGISTER_REQBODY))))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trainee successfully registered", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExamples.GENERAL_AUTH_REQBODY))),

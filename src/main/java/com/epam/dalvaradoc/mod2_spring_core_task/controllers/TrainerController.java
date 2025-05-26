@@ -43,15 +43,6 @@ public class TrainerController {
         this.trainerService = trainerService;
     }
 
-    @Operation(summary = "Get all trainers", description = "This endpoint is for tests only. Retrieves a list of all registered trainers")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved trainers list"),
-    })
-    @GetMapping
-    public ResponseEntity<List<TrainerDTO>> getAllTrainers() {
-        return ResponseEntity.ok(trainerService.getAllTrainers());
-    }
-
     @Operation(summary = "Get trainer by username", description = "Retrieves trainer information by username", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Auth credentials of Trainer", content = @Content(mediaType = "application/json", examples = @ExampleObject(SwaggerExamples.GENERAL_AUTH_REQBODY))))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved trainer details", content = @Content(mediaType = "application/json", examples = @ExampleObject(value = SwaggerExamples.TRAINER_GET_RESBODY))),

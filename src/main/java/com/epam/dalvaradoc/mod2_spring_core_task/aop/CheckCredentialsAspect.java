@@ -6,9 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.epam.dalvaradoc.mod2_spring_core_task.dao.User;
 import com.epam.dalvaradoc.mod2_spring_core_task.dto.AuthenticationDTO;
@@ -71,10 +69,10 @@ public class CheckCredentialsAspect {
   }
 
   private boolean checkIfUserPassed(Object[] args) {
-    return args[args.length - 1] != null &&  User.class.isAssignableFrom(args[args.length - 1].getClass());
+    return args[args.length - 1] != null && User.class.isAssignableFrom(args[args.length - 1].getClass());
   }
 
   private boolean checkIfAuthenticationDTOPassed(Object[] args) {
-    return  args[args.length - 1] != null && AuthenticationDTO.class.isAssignableFrom(args[args.length - 1].getClass());
+    return args[args.length - 1] != null && AuthenticationDTO.class.isAssignableFrom(args[args.length - 1].getClass());
   }
 }
