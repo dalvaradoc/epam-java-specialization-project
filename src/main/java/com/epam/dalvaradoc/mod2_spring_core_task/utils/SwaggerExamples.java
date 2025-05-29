@@ -1,17 +1,19 @@
+/* (C)2025 */
 package com.epam.dalvaradoc.mod2_spring_core_task.utils;
 
 public class SwaggerExamples {
-    private SwaggerExamples() {
-    }
+    private SwaggerExamples() {}
 
-    public static final String GENERAL_AUTH_REQBODY = """
+    public static final String GENERAL_AUTH_REQBODY =
+            """
             {
                 "username": "Peggie.Barthelemy",
                 "password": "rD4=ob.G8"
             }
             """;
 
-    public static final String GENERAL_CHANGE_PASSWORD_REQBODY = """
+    public static final String GENERAL_CHANGE_PASSWORD_REQBODY =
+            """
             {
                 "username": "john.doe",
                 "password": "currentPassword",
@@ -19,14 +21,16 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String GENERAL_CHANGE_PASSWORD_RESBODY = """
+    public static final String GENERAL_CHANGE_PASSWORD_RESBODY =
+            """
             {
                 "username": "john.doe",
                 "password": "newPassword123"
             }
             """;
 
-    public static final String TRAINEE_REGISTER_REQBODY = """
+    public static final String TRAINEE_REGISTER_REQBODY =
+            """
             {
                 "firstName": "Peggie",
                 "lastName": "Barthelemy",
@@ -36,7 +40,8 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINEE_GET_RESBODY = """
+    public static final String TRAINEE_GET_RESBODY =
+            """
             {
                 "firstName": "Peggie",
                 "lastName": "Barthelemy",
@@ -78,7 +83,8 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINEE_PUT_REQBODY = """
+    public static final String TRAINEE_PUT_REQBODY =
+            """
             {
                 "firstName": "Lola",
                 "lastName": "Barthelemy",
@@ -92,7 +98,8 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINEE_PUT_RESBODY = """
+    public static final String TRAINEE_PUT_RESBODY =
+            """
             {
                 "firstName": "Lola",
                 "lastName": "Barthelemy",
@@ -134,7 +141,8 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINEE_GET_NOT_ASIGNED_TRAINERS_RESBODY = """
+    public static final String TRAINEE_GET_NOT_ASIGNED_TRAINERS_RESBODY =
+            """
             [
                 {
                     "auth": {
@@ -380,7 +388,8 @@ public class SwaggerExamples {
             ]
             """;
 
-    public static final String TRAINEE_ADD_TRAINER_TO_LIST_REQBODY = """
+    public static final String TRAINEE_ADD_TRAINER_TO_LIST_REQBODY =
+            """
             {
                 "auth": {
                     "username": "Peggie.Barthelemy",
@@ -393,7 +402,8 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINEE_ADD_TRAINER_TO_LIST_RESBODY = """
+    public static final String TRAINEE_ADD_TRAINER_TO_LIST_RESBODY =
+            """
             [
                 {
                     "auth": {
@@ -460,7 +470,8 @@ public class SwaggerExamples {
             ]
             """;
 
-    public static final String TRAINEE_GET_TRAININGS_RESBODY = """
+    public static final String TRAINEE_GET_TRAININGS_RESBODY =
+            """
             [
                 {
                     "trainer": {
@@ -501,7 +512,8 @@ public class SwaggerExamples {
             ]
             """;
 
-    public static final String TRAINER_GET_RESBODY = """
+    public static final String TRAINER_GET_RESBODY =
+            """
             {
                 "firstName": "Brady",
                 "lastName": "Verick",
@@ -563,7 +575,8 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINER_REGISTER_REQBODY = """
+    public static final String TRAINER_REGISTER_REQBODY =
+            """
             {
                 "userId": "26",
                 "firstName": "Brady",
@@ -575,14 +588,16 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINER_REGISTER_RESBODY = """
+    public static final String TRAINER_REGISTER_RESBODY =
+            """
             {
                 "username": "Brady.Verick#2",
                 "password": "W899/VU$=F"
             }
             """;
 
-    public static final String TRAINER_PUT_REQBODY = """
+    public static final String TRAINER_PUT_REQBODY =
+            """
             {
                 "firstName": "Jhon",
                 "lastName": "Verick",
@@ -595,7 +610,8 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINER_PUT_RESBODY = """
+    public static final String TRAINER_PUT_RESBODY =
+            """
             {
                 "auth": {
                     "username": "Brady.Verick"
@@ -625,7 +641,8 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINER_GET_TRAININGS_RESBODY = """
+    public static final String TRAINER_GET_TRAININGS_RESBODY =
+            """
             [
                 {
                     "trainee": {
@@ -714,7 +731,8 @@ public class SwaggerExamples {
             ]
             """;
 
-    public static final String TRAINING_CREATE_TRAINING_REQBODY = """
+    public static final String TRAINING_CREATE_TRAINING_REQBODY =
+            """
             {
                 "auth": {
                     "username": "Peggie.Barthelemy",
@@ -739,7 +757,8 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINING_CREATE_TRAINING_RESBODY = """
+    public static final String TRAINING_CREATE_TRAINING_RESBODY =
+            """
             {
                 "trainee": {
                     "auth": {
@@ -764,7 +783,8 @@ public class SwaggerExamples {
             }
             """;
 
-    public static final String TRAINING_GET_TRAINING_TYPES_RESBODY = """
+    public static final String TRAINING_GET_TRAINING_TYPES_RESBODY =
+            """
             [
                 {
                     "name": "WEIGHT"
