@@ -1,3 +1,4 @@
+/* (C)2025 */
 package com.epam.dalvaradoc.mod2_spring_core_task.dao;
 
 import jakarta.persistence.Entity;
@@ -18,12 +19,13 @@ import lombok.Setter;
 @Entity(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User {
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private String userId;
-  private String firstName;
-  private String lastName;
-  private String username;
-  private String password;
-  private boolean isActive;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String userId;
+
+    private String firstName;
+    private String lastName;
+    private String username;
+    private String password;
+    private boolean isActive;
 }
