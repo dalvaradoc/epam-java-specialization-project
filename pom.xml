@@ -156,6 +156,11 @@
 					</java>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.9.3.0</version>
+			</plugin>
 		</plugins>
 	</build>
 
