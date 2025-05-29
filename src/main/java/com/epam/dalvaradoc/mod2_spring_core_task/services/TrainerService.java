@@ -97,14 +97,13 @@ public class TrainerService {
 
   @CheckCredentials
   public TrainerDTO updateTrainer(@Valid UpdateTrainerDTO dto, @Valid AuthenticationDTO auth) {
-    Optional<Trainer> trainerOptional = Optional
-        .ofNullable(trainerRepository.findByUsername(dto.getAuth().getUsername()));
-    if (trainerOptional.isEmpty()) {
-      return null;
-    }
+    return Optional.ofNullable(trainerRepository.findByUsername(dto.getAuth().getUsername()))
+        .map(t -> updateTrainerFieldsAndSave(t, dto))
+        .map(mapper::toDTO)
+        .orElse(null);
+  }
 
-    Trainer trainer = trainerOptional.get();
-
+  private Trainer updateTrainerFieldsAndSave(Trainer trainer, UpdateTrainerDTO dto) {
     trainer.setFirstName(dto.getFirstName());
     trainer.setLastName(dto.getLastName());
     trainer.setSpecialization(trainingTypeRepository.findByName(dto.getSpecialization()));
@@ -112,7 +111,8 @@ public class TrainerService {
 
     trainerRepository.save(trainer);
     LOGGER.info("Trainer updated: " + trainer.getUserId() + " " + trainer.getFirstName() + " " + trainer.getLastName());
-    return mapper.toDTO(trainer);
+
+    return trainer;
   }
 
   @CheckCredentials

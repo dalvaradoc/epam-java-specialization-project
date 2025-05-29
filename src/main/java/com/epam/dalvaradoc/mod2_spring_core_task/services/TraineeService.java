@@ -1,10 +1,14 @@
 package com.epam.dalvaradoc.mod2_spring_core_task.services;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -156,23 +160,16 @@ public class TraineeService {
 
   @CheckCredentials
   public List<TrainerDTO> getTrainersNotAssignedToTrainee(@Valid AuthenticationDTO auth) {
-    Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
-    if (trainee == null) {
-      return null;
-    }
-    List<Trainer> allTrainers = trainerRepository.findAll();
+    return Optional.ofNullable(traineeRepository.findByUsername(auth.getUsername()))
+        .map(trainee -> Optional.ofNullable(trainee.getTrainers()).orElse(Collections.emptySet()))
+        .map(this::getTrainersNotAssignedToTrainee)
+        .orElse(null);
+  }
 
-    if (trainee.getTrainers() == null) {
-      return allTrainers
-          .stream()
-          .filter(trainer -> trainer.isActive())
-          .map(trainerMapper::toDTO)
-          .toList();
-    }
-
-    return allTrainers
+  private List<TrainerDTO> getTrainersNotAssignedToTrainee(Set<Trainer> traineesTrainers) {
+    return trainerRepository.findAll()
         .stream()
-        .filter(trainer -> trainer.isActive() && !trainee.getTrainers().contains(trainer))
+        .filter(trainer -> trainer.isActive() && !traineesTrainers.contains(trainer))
         .map(trainerMapper::toDTO)
         .toList();
   }
@@ -180,20 +177,8 @@ public class TraineeService {
   @CheckCredentials
   public List<TrainerDTO> updateTrainersList(List<String> trainersUsernames, @Valid AuthenticationDTO auth) {
     Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
-    if (trainee == null) {
-      return null;
-    }
 
-    if (trainee.getTrainers() == null) {
-      trainee.setTrainers(new HashSet<>());
-    }
-
-    trainersUsernames.forEach(trainerUsername -> {
-      Trainer trainer = trainerRepository.findByUsername(trainerUsername);
-      if (trainer != null) {
-        trainee.getTrainers().add(trainer);
-      }
-    });
+    addTrainersToTrainee(trainersUsernames, trainee);
 
     traineeRepository.save(trainee);
     LOGGER.info("Trainee trainers list updated: " + trainee.getTrainers().toString());
@@ -202,6 +187,18 @@ public class TraineeService {
         .stream()
         .map(trainerMapper::toDTO)
         .toList();
+  }
+
+  private void addTrainersToTrainee(List<String> trainersUsernames, Trainee trainee) {
+    if (trainee.getTrainers() == null) {
+      trainee.setTrainers(new HashSet<>());
+    }
+
+    Optional.ofNullable(trainersUsernames).orElse(List.of())
+        .stream()
+        .map(trainerRepository::findByUsername)
+        .filter(Objects::nonNull)
+        .forEach(trainer -> trainee.getTrainers().add(trainer));
   }
 
   @CheckCredentials

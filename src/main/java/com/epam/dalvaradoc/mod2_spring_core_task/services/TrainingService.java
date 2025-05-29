@@ -95,22 +95,7 @@ public class TrainingService {
     Trainee trainee = traineeRepository.findByUsername(auth.getUsername());
     Trainer trainer = trainerRepository.findByUsername(auth.getUsername());
 
-    if (dto.getName() == null && dto.getName().isEmpty()) {
-      throw new IllegalArgumentException("Training name cannot be null or empty");
-    }
-
-    if (trainee == null && trainer == null) {
-      throw new IllegalArgumentException("User not found");
-    }
-
-    if (trainee != null && dto.getTrainee().getAuth() != null
-        && !auth.getUsername().equals(dto.getTrainee().getAuth().getUsername())) {
-      throw new BadCredentialsException("Trainee username does not match");
-    }
-    if (trainer != null && dto.getTrainer().getAuth() != null
-        && !auth.getUsername().equals(dto.getTrainer().getAuth().getUsername())) {
-      throw new BadCredentialsException("Trainee username does not match");
-    }
+    verifyCreatingTrainingArguments(dto, trainee, trainer, auth);
 
     trainee = trainee == null ? traineeRepository.findByUsername(dto.getTrainee().getAuth().getUsername()) : trainee;
     trainer = trainer == null ? trainerRepository.findByUsername(dto.getTrainer().getAuth().getUsername()) : trainer;
@@ -129,6 +114,26 @@ public class TrainingService {
 
     trainingRepository.save(training);
     return mapper.toDTO(training);
+  }
+
+  private void verifyCreatingTrainingArguments(TrainingDTO dto, Trainee trainee, Trainer trainer,
+      AuthenticationDTO auth) {
+    if (dto.getName() == null && dto.getName().isEmpty()) {
+      throw new IllegalArgumentException("Training name cannot be null or empty");
+    }
+
+    if (trainee == null && trainer == null) {
+      throw new IllegalArgumentException("User not found");
+    }
+
+    if (trainee != null && dto.getTrainee().getAuth() != null
+        && !auth.getUsername().equals(dto.getTrainee().getAuth().getUsername())) {
+      throw new BadCredentialsException("Trainee username does not match");
+    }
+    if (trainer != null && dto.getTrainer().getAuth() != null
+        && !auth.getUsername().equals(dto.getTrainer().getAuth().getUsername())) {
+      throw new BadCredentialsException("Trainee username does not match");
+    }
   }
 
   @CheckCredentials
